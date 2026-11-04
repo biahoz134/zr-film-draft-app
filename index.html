@@ -3,835 +3,396 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZR Film Draft - AI Film & Series Studio</title>
+    <title>ReelMate AI Pro Studio - World AI Film & Drama Engine</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Custom scrollbar and smooth view switching */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0b0e14;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #1e293b;
-            border-radius: 9999px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #334155;
-        }
         .page-section { display: none; }
         .page-section.active { display: block; }
-        .dropdown-menu { display: none; }
-        .dropdown-menu.show { display: block; }
-        .modal-overlay { display: none; }
-        .modal-overlay.show { display: flex; }
     </style>
 </head>
 <body class="bg-[#0b0e14] text-slate-100 font-sans antialiased selection:bg-purple-600 selection:text-white">
 
+    <!-- AUTHENTICATION / SIGN UP MODAL -->
+    <div id="auth-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-[#121722] border border-slate-800 rounded-3xl p-8 max-w-md w-full space-y-6 shadow-2xl relative">
+            <div class="text-center space-y-2">
+                <div class="w-12 h-12 mx-auto rounded-2xl bg-gradient-to-tr from-purple-700 via-indigo-600 to-pink-600 flex items-center justify-center text-white font-black text-xl shadow-xl ring-2 ring-purple-500/30">
+                    RM
+                </div>
+                <h2 class="text-2xl font-black text-white tracking-tight">ReelMate AI Pro Studio</h2>
+                <p class="text-xs text-slate-400">Sign up to claim your 3-Day Free Trial (Short videos 1-5 mins).</p>
+            </div>
+
+            <form onsubmit="handleUserSignUp(event)" class="space-y-4 text-xs">
+                <div>
+                    <label class="block text-slate-300 font-semibold mb-1">Full Name</label>
+                    <input id="user-fullname" type="text" required placeholder="Enter your full name" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500">
+                </div>
+                <div>
+                    <label class="block text-slate-300 font-semibold mb-1">Email Address</label>
+                    <input id="user-email" type="email" required placeholder="name@domain.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500">
+                </div>
+                <div>
+                    <label class="block text-slate-300 font-semibold mb-1">Password</label>
+                    <input type="password" required placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500">
+                </div>
+                <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold py-3 rounded-xl shadow-lg transition">Create Account & Start Trial</button>
+            </form>
+
+            <div class="pt-4 border-t border-slate-800/80 text-center">
+                <button onclick="bypassAsOwner()" class="text-[11px] text-purple-400 font-bold hover:underline">🔐 Admin Bypass Access</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP STRUCTURE -->
     <div class="flex h-screen w-screen overflow-hidden bg-[#0b0e14] relative">
         
-        <!-- Left Sidebar Navigation -->
-        <aside class="w-64 bg-[#11151f] border-r border-slate-800/80 flex flex-col justify-between p-4 flex-shrink-0 z-20">
+        <!-- Left Navigation Sidebar -->
+        <aside class="w-64 bg-[#11151f] border-r border-slate-800/80 flex flex-col justify-between p-4 flex-shrink-0 z-10 overflow-y-auto">
             <div class="space-y-6">
-                <!-- Brand Logo Header -->
+                <!-- Professional Logo Header -->
                 <div class="flex items-center space-x-3 px-2 cursor-pointer group" onclick="switchNav('home')">
-                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-purple-700 via-indigo-600 to-pink-600 flex items-center justify-center font-black text-white shadow-xl ring-2 ring-purple-500/20 group-hover:scale-105 transition">
-                        <span class="tracking-tighter text-sm">ZR</span>
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-700 via-indigo-600 to-pink-600 flex items-center justify-center font-black text-white shadow-xl ring-2 ring-purple-500/20 group-hover:scale-105 transition">
+                        <span class="tracking-tighter text-base">RM</span>
                     </div>
                     <div class="flex flex-col">
-                        <span class="font-extrabold text-sm tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-purple-300 leading-tight">ZR Film Draft</span>
-                        <span class="text-[10px] text-purple-400 font-semibold tracking-wider uppercase">ReelMate AI Pro</span>
+                        <span class="font-extrabold text-sm tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-purple-300 leading-tight">ReelMate AI Pro</span>
+                        <span class="text-[10px] text-purple-400 font-semibold tracking-wider uppercase">Enterprise Film Studio</span>
                     </div>
                 </div>
 
-                <!-- Primary Workspace Navigation -->
+                <!-- Main Navigation -->
                 <nav class="space-y-1 text-sm font-medium text-slate-400">
                     <button id="btn-home" onclick="switchNav('home')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition bg-gradient-to-r from-purple-600/30 to-indigo-600/20 text-purple-300 border border-purple-500/30 font-semibold">
-                        <span>🏠</span><span>Home</span>
+                        <span>🏠</span><span>Home Studio</span>
                     </button>
-                    <button id="btn-script-studio" onclick="switchNav('script-studio')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition hover:bg-slate-800/60 hover:text-slate-200">
-                        <span>✍️</span><span>Script Studio</span>
+                    <button id="btn-studio" onclick="switchNav('studio')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition hover:bg-slate-800/60 hover:text-slate-200">
+                        <span>🎬</span><span>Universal Generator</span>
                     </button>
-                    <button id="btn-ai-agent" onclick="switchNav('ai-agent')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition hover:bg-slate-800/60 hover:text-slate-200">
-                        <span>🤖</span><span>AI Film Agent</span>
+                    <button id="btn-viral-agent" onclick="switchNav('viral-agent')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition hover:bg-slate-800/60 hover:text-slate-200">
+                        <span>🚀</span><span>Viral AI Agent</span>
                     </button>
-                    <button id="btn-all-projects" onclick="switchNav('all-projects')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition hover:bg-slate-800/60 hover:text-slate-200">
-                        <span>📁</span><span>All Projects</span>
+                    <button id="btn-downloader" onclick="switchNav('downloader')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition hover:bg-slate-800/60 hover:text-slate-200">
+                        <span>📥</span><span>4K Video Downloader</span>
                     </button>
                 </nav>
 
-                <!-- Team & Asset Navigation -->
+                <!-- Billing & System Pages -->
                 <div class="pt-4 border-t border-slate-800/80 space-y-1">
-                    <span class="px-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Team</span>
-                    <button id="btn-asset" onclick="switchNav('asset')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm transition text-slate-400 hover:bg-slate-800/60">
-                        <span>📂</span><span>Asset</span>
+                    <span class="px-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Payments & Gateway</span>
+                    <button id="btn-pricing" onclick="switchNav('pricing')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm text-slate-400 hover:bg-slate-800/60">
+                        <span>💳</span><span>Global Subscription</span>
                     </button>
-                    <button id="btn-team-mgmt" onclick="switchNav('team-mgmt')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm transition text-slate-400 hover:bg-slate-800/60">
-                        <span>👥</span><span>Team Management</span>
+                    <button id="btn-privacy" onclick="switchNav('privacy')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm text-slate-400 hover:bg-slate-800/60">
+                        <span>🛡️</span><span>Security & Privacy</span>
                     </button>
                 </div>
             </div>
 
-            <!-- Bottom Owner & Utility Navigation -->
+            <!-- Account & Security Status -->
             <div class="pt-4 border-t border-slate-800/80 space-y-2">
-                <button id="btn-payouts" onclick="switchNav('payouts')" class="nav-btn w-full text-left px-3 py-2 text-xs rounded-lg transition bg-slate-900 border border-slate-800 text-slate-300 hover:border-purple-500/40">
-                    💳 Payouts & Wallets
-                </button>
-                <button id="btn-owner" onclick="switchNav('owner')" class="nav-btn w-full text-left px-3 py-2 text-xs rounded-lg transition bg-purple-950/40 border border-purple-700/50 text-purple-300 hover:bg-purple-900/40">
-                    🔐 Owner Access Mode
+                <div id="account-status-badge" class="px-3 py-2 bg-purple-950/40 border border-purple-500/30 rounded-xl text-[11px] text-purple-300 font-bold text-center">
+                    ⏳ 3-Day Trial Active
+                </div>
+                <button id="btn-owner" onclick="switchNav('owner')" class="nav-btn w-full text-left px-3 py-2 text-xs rounded-lg transition bg-purple-950/40 border border-purple-700/50 text-purple-300 hover:bg-purple-900/40 font-bold">
+                    🔐 Secret Admin Portal
                 </button>
             </div>
         </aside>
 
-        <!-- Main Workspace Section -->
+        <!-- Main Workspace -->
         <div class="flex-1 flex flex-col h-full overflow-y-auto bg-[#0b0e14]">
-            
-            <!-- Global Top Bar Header -->
-            <header class="h-14 border-b border-slate-800/80 px-6 flex justify-between items-center bg-[#0d111a]/80 backdrop-blur sticky top-0 z-30">
+            <!-- Top Header -->
+            <header class="h-14 border-b border-slate-800/80 px-6 flex justify-between items-center bg-[#0d111a]/80 backdrop-blur sticky top-0 z-20">
                 <div class="text-xs text-slate-400 font-medium capitalize">
-                    Studio &gt; <span id="header-nav-title" class="text-slate-200 font-semibold">Home</span>
+                    ReelMate AI Pro &gt; <span id="header-nav-title" class="text-slate-200">Home Studio</span>
                 </div>
                 <div class="flex items-center space-x-4 text-slate-400 text-xs">
-                    <button class="hover:text-white flex items-center space-x-1"><span>📖</span><span>Creator Guide</span></button>
-                    <button class="hover:text-white flex items-center space-x-1"><span>💼</span><span>Business</span></button>
-                    <button class="hover:text-white">🔔</button>
-                    <button class="hover:text-white">⚙️</button>
-                    <button onclick="toggleModal('credits-modal')" class="hover:text-white border border-slate-700 px-2.5 py-1 rounded-md text-slate-300 flex items-center space-x-1.5 hover:border-purple-500/50 transition">
-                        <span>🛒 Pricing</span>
-                        <span class="bg-purple-900/60 text-purple-300 px-1.5 py-0.5 rounded text-[10px] font-bold">⚡ 0 Credits</span>
-                    </button>
-                    <div onclick="toggleModal('profile-modal')" class="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xs cursor-pointer hover:opacity-90 shadow-md ring-2 ring-purple-500/30">
-                        ZR
-                    </div>
+                    <span id="active-user-name" class="font-bold text-slate-200">Guest User</span>
+                    <button onclick="switchNav('pricing')" class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold px-3 py-1 rounded-lg text-xs hover:opacity-90">Upgrade Pro</button>
                 </div>
             </header>
 
-            <!-- ================= PAGE 1: HOME VIEW ================= -->
+            <!-- 1. HOME VIEW -->
             <section id="sec-home" class="page-section active p-8 max-w-6xl mx-auto w-full space-y-8">
                 <div class="space-y-2">
-                    <h1 class="text-3xl font-black text-white tracking-tight">Welcome back, Zohaib Rajpoot!</h1>
-                    <p class="text-xs text-slate-400">Select an AI creation workflow or continue editing your studio drafts.</p>
+                    <h1 class="text-3xl font-extrabold text-white">ReelMate AI Pro - Advanced Film Studio</h1>
+                    <p class="text-xs text-slate-400">Generate multi-episode dramas, cinematic short films, luxury car clips, documentaries & viral videos.</p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div onclick="switchNav('script-studio')" class="bg-[#121722] border border-slate-800/90 rounded-2xl p-6 space-y-4 hover:border-purple-500/60 transition cursor-pointer group shadow-xl">
-                        <div class="w-12 h-12 rounded-xl bg-purple-950/60 border border-purple-800/50 flex items-center justify-center text-2xl">✍️</div>
-                        <div class="space-y-1">
-                            <h3 class="font-bold text-base text-white group-hover:text-purple-300 transition">AI Drama Studio</h3>
-                            <p class="text-xs text-slate-400 leading-relaxed">Adapt novels and stories into professional multi-episode film scripts with automated scene casting.</p>
-                        </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div onclick="switchNav('studio')" class="bg-[#121722] border border-slate-800 rounded-2xl p-6 space-y-4 hover:border-purple-500/60 transition cursor-pointer group shadow-xl">
+                        <div class="text-4xl">🎬</div>
+                        <h3 class="font-bold text-base text-white group-hover:text-purple-300">Universal Generator</h3>
+                        <p class="text-xs text-slate-400">1 to 200 Episodes & 1 to 200 Minutes duration selection with multi-genre AI modeling.</p>
                     </div>
 
-                    <div onclick="switchNav('ai-agent')" class="bg-[#121722] border border-slate-800/90 rounded-2xl p-6 space-y-4 hover:border-purple-500/60 transition cursor-pointer group shadow-xl">
-                        <div class="w-12 h-12 rounded-xl bg-purple-950/60 border border-purple-800/50 flex items-center justify-center text-2xl">🤖</div>
-                        <div class="space-y-1">
-                            <h3 class="font-bold text-base text-white group-hover:text-purple-300 transition">AI Film Agent</h3>
-                            <p class="text-xs text-slate-400 leading-relaxed">Generate cinematic short videos, Cyberpunk CG clips, and Pixar 3D animated storylines automatically.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ================= PAGE 2: SCRIPT STUDIO VIEW (EXACT REPLICA) ================= -->
-            <section id="sec-script-studio" class="page-section p-8 max-w-5xl mx-auto w-full space-y-6">
-                <div class="text-center space-y-2">
-                    <h1 className="text-3xl font-black text-white tracking-tight">
-                        Hi, Screenwriter! Let's create tomorrow's #1 hit.
-                    </h1>
-                    <p class="text-xs text-slate-400 max-w-2xl mx-auto">
-                        Add the novel you want to adapt, tell me which chapters you'd like to adapt and what you want to keep or adjust. You can also share your adaptation ideas first.
-                    </p>
-                </div>
-
-                <!-- Central Interactive Script Box -->
-                <div class="bg-[#121722] border border-slate-800 rounded-2xl p-5 shadow-2xl space-y-4 relative">
-                    <!-- Top Action Filters Toolbar -->
-                    <div class="flex flex-wrap items-center gap-2 text-xs font-medium border-b border-slate-800/80 pb-3 relative z-20">
-                        <button title="Add Novel/Script" onclick="alert('File upload window triggered.')" class="p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg flex items-center gap-1">
-                            <span>+</span>
-                        </button>
-
-                        <!-- Tag Selection Pills -->
-                        <div class="flex bg-slate-950 p-1 rounded-xl border border-slate-800 gap-1">
-                            <button onclick="setScriptTag(this)" class="tag-btn px-3 py-1 rounded-lg text-xs transition text-slate-400 hover:text-slate-200">Original Idea</button>
-                            <button onclick="setScriptTag(this)" class="tag-btn px-3 py-1 rounded-lg text-xs transition bg-purple-900/60 border border-purple-500 text-purple-200 font-semibold">Novel Adaptation ✕</button>
-                            <button onclick="setScriptTag(this)" class="tag-btn px-3 py-1 rounded-lg text-xs transition text-slate-400 hover:text-slate-200">Script Spin-off</button>
-                            <button onclick="setScriptTag(this)" class="tag-btn px-3 py-1 rounded-lg text-xs transition text-slate-400 hover:text-slate-200">Continue Writing</button>
-                        </div>
-
-                        <!-- Target Market Dropdown -->
-                        <div class="relative">
-                            <button onclick="toggleDropdown('dropdown-market')" class="bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-lg text-slate-300 flex items-center space-x-1 hover:border-slate-700">
-                                <span id="lbl-market">North America</span>
-                                <span class="text-[10px]">▼</span>
-                            </button>
-                            <div id="dropdown-market" class="dropdown-menu absolute left-0 mt-1 w-44 bg-[#161c28] border border-slate-800 rounded-xl p-2 shadow-xl z-50 text-xs space-y-1">
-                                <div class="text-[10px] text-slate-500 px-2 font-bold uppercase">Target Market</div>
-                                <div onclick="selectMarket('North America')" class="px-2 py-1.5 rounded hover:bg-slate-800 cursor-pointer flex justify-between text-purple-300 font-bold"><span>North America</span><span>✓</span></div>
-                                <div onclick="selectMarket('Europe')" class="px-2 py-1.5 rounded hover:bg-slate-800 cursor-pointer text-slate-300"><span>Europe</span></div>
-                                <div onclick="selectMarket('Southeast Asia')" class="px-2 py-1.5 rounded hover:bg-slate-800 cursor-pointer text-slate-300"><span>Southeast Asia</span></div>
-                            </div>
-                        </div>
-
-                        <!-- Adaptation Level Dropdown -->
-                        <div class="relative">
-                            <button onclick="toggleDropdown('dropdown-adaptation')" class="bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-lg text-slate-300 flex items-center space-x-1 hover:border-slate-700">
-                                <span id="lbl-adaptation">Standard Adaptation</span>
-                                <span class="text-[10px]">▼</span>
-                            </button>
-                            <div id="dropdown-adaptation" class="dropdown-menu absolute left-0 mt-1 w-72 bg-[#161c28] border border-slate-800 rounded-xl p-3 shadow-2xl z-50 text-xs space-y-2">
-                                <div class="text-[11px] font-bold text-slate-300">Adaptation Level</div>
-                                <div onclick="selectAdaptation('Strictly Follow')" class="p-2 rounded-lg border bg-slate-950 border-slate-800 hover:border-purple-500/50 cursor-pointer text-slate-300">
-                                    <div class="font-bold">Strictly Follow</div>
-                                    <div class="text-[10px] mt-0.5 opacity-75">Adapt strictly following original works order and content with format conversion.</div>
-                                </div>
-                                <div onclick="selectAdaptation('Standard Adaptation')" class="p-2 rounded-lg border bg-purple-950/60 border-purple-500 text-purple-200 cursor-pointer">
-                                    <div class="font-bold flex justify-between"><span>Standard Adaptation</span><span>●</span></div>
-                                    <div class="text-[10px] mt-0.5 opacity-75">Follow original order with moderate cuts - suitable for most adaptations.</div>
-                                </div>
-                                <div onclick="selectAdaptation('Creative Adaptation')" class="p-2 rounded-lg border bg-slate-950 border-slate-800 hover:border-purple-500/50 cursor-pointer text-slate-300">
-                                    <div class="font-bold">Creative Adaptation</div>
-                                    <div class="text-[10px] mt-0.5 opacity-75">Building on characters and core conflict, restructuring narrative with new plotlines.</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Adaptation Range Dropdown -->
-                        <div class="relative">
-                            <button onclick="toggleDropdown('dropdown-range')" class="bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-lg text-slate-300 flex items-center space-x-1 hover:border-slate-700">
-                                <span id="lbl-range">Full Novel</span>
-                                <span class="text-[10px]">▼</span>
-                            </button>
-                            <div id="dropdown-range" class="dropdown-menu absolute left-0 mt-1 w-52 bg-[#161c28] border border-slate-800 rounded-xl p-3 shadow-2xl z-50 text-xs space-y-2">
-                                <div class="text-[10px] font-bold text-slate-400 uppercase">Adaptation Range</div>
-                                <div onclick="selectRange('Full Novel')" class="p-2 rounded hover:bg-slate-800 cursor-pointer flex justify-between text-purple-300 font-bold">
-                                    <span>Full Novel</span><span>✓</span>
-                                </div>
-                                <div onclick="selectRange('Chapters 1 to 200')" class="p-2 rounded hover:bg-slate-800 cursor-pointer text-slate-300">
-                                    <span>Chapters 1 to 200</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Script Settings Trigger -->
-                        <button onclick="toggleModal('script-settings-modal')" class="bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-lg text-slate-300 hover:border-purple-500/40">
-                            ⚙️ Script settings
-                        </button>
-
-                        <!-- AI Model Selector Dropdown -->
-                        <div class="relative ml-auto">
-                            <button onclick="toggleDropdown('dropdown-script-model')" class="bg-purple-950/40 border border-purple-800/60 px-3 py-1.5 rounded-lg text-purple-300 flex items-center space-x-1 font-semibold">
-                                <span id="lbl-script-model">✦ Gemini 3.8 Flash</span>
-                                <span class="text-[10px]">▼</span>
-                            </button>
-                            <div id="dropdown-script-model" class="dropdown-menu absolute right-0 mt-1 w-64 bg-[#161c28] border border-slate-800 rounded-xl p-3 shadow-2xl z-50 text-xs space-y-2">
-                                <div onclick="selectScriptModel('ChatGPT 5.6 Sol')" class="p-2.5 rounded-lg border bg-slate-950 border-slate-800 cursor-pointer text-slate-400 hover:border-purple-500/50">
-                                    <div class="font-bold text-slate-200">ChatGPT 5.6 Sol</div>
-                                    <div class="text-[10px] mt-0.5 opacity-75">Fast generation, consistent results, and great value for short dramas.</div>
-                                </div>
-                                <div onclick="selectScriptModel('Gemini 3.8 Flash')" class="p-2.5 rounded-lg border bg-purple-950/60 border-purple-500 text-purple-200 cursor-pointer">
-                                    <div class="font-bold flex justify-between"><span>Gemini 3.8 Flash</span><span>✓</span></div>
-                                    <div class="text-[10px] mt-0.5 opacity-75">A top-tier model built for complex storylines ideal for short films.</div>
-                                </div>
-                            </div>
-                        </div>
+                    <div onclick="switchNav('viral-agent')" class="bg-[#121722] border border-slate-800 rounded-2xl p-6 space-y-4 hover:border-purple-500/60 transition cursor-pointer group shadow-xl">
+                        <div class="text-4xl">🚀</div>
+                        <h3 class="font-bold text-base text-white group-hover:text-purple-300">Viral AI Prompt Assistant</h3>
+                        <p class="text-xs text-slate-400">Identify trending YouTube & TikTok topics with automated high-ranking prompts.</p>
                     </div>
 
-                    <!-- Input Prompt Textarea -->
-                    <textarea id="script-textarea" rows="6" placeholder="Add the novel you want to adapt, tell me which chapters you'd like to adapt and what you want to keep or adjust..." class="w-full bg-slate-950/70 border border-slate-800/80 rounded-xl p-4 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-purple-500 transition resize-none"></textarea>
-
-                    <!-- Bottom Quick Suggestion Chips -->
-                    <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
-                        <div class="flex flex-wrap gap-2 text-xs">
-                            <button onclick="setScriptText('Keep what makes this script compelling, and build a new story in a different setting.')" class="bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200 px-3 py-1.5 rounded-lg transition">
-                                📘 Keep what makes this script compelling...
-                            </button>
-                            <button onclick="setScriptText('I\'ve written the opening episodes. Help me finish the story.')" class="bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200 px-3 py-1.5 rounded-lg transition">
-                                📑 I've written the opening episodes...
-                            </button>
-                            <button onclick="setScriptText('')" class="p-1.5 text-slate-500 hover:text-white">↻</button>
-                        </div>
-
-                        <button onclick="alert('Generating Script Adaptation...')" class="w-9 h-9 rounded-full bg-purple-600 hover:bg-purple-500 text-white flex items-center justify-center font-bold text-sm shadow-lg">
-                            ➔
-                        </button>
+                    <div onclick="switchNav('downloader')" class="bg-[#121722] border border-slate-800 rounded-2xl p-6 space-y-4 hover:border-purple-500/60 transition cursor-pointer group shadow-xl">
+                        <div class="text-4xl">📥</div>
+                        <h3 class="font-bold text-base text-white group-hover:text-purple-300">4K No-Watermark Downloader</h3>
+                        <p class="text-xs text-slate-400">Export high-resolution clips from TikTok, Instagram, YouTube & Facebook.</p>
                     </div>
                 </div>
             </section>
 
-            <!-- ================= PAGE 3: AI FILM AGENT VIEW (EXACT REPLICA) ================= -->
-            <section id="sec-ai-agent" class="page-section p-8 max-w-6xl mx-auto w-full space-y-8">
-                <div class="text-center space-y-2 py-2">
-                    <h1 class="text-3xl font-black text-white tracking-tight flex items-center justify-center gap-2">
-                        <span>🤖</span> Turn your ideas into creative short videos
-                    </h1>
+            <!-- 2. UNIVERSAL GENERATOR VIEW -->
+            <section id="sec-studio" class="page-section p-8 max-w-5xl mx-auto w-full space-y-6">
+                <div class="space-y-2">
+                    <h1 class="text-2xl font-bold text-white">Universal Video & Drama Generator</h1>
+                    <p class="text-xs text-slate-400">Specify language, aspect ratio (16:9 / 9:16), episode counts (1-200), and duration (1-200 min).</p>
                 </div>
 
-                <!-- Central Prompt & Tool Container -->
-                <div class="bg-[#121722] border border-slate-800 rounded-2xl p-4 shadow-2xl space-y-4">
-                    <div class="flex flex-wrap items-center gap-2 text-xs font-medium border-b border-slate-800/80 pb-3 relative z-20">
-                        <button onclick="alert('Asset upload trigger.')" class="p-1.5 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-lg flex items-center gap-1">
-                            <span>＋ Upload</span>
-                        </button>
-
-                        <button onclick="alert('Skill selection dialog.')" class="bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-lg text-slate-300 hover:border-slate-700">
-                            ⚙️ Skill
-                        </button>
-
-                        <!-- Auto Text Dropdown -->
-                        <div class="relative">
-                            <button onclick="toggleDropdown('dropdown-autotext')" class="bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-lg text-slate-300 flex items-center gap-1 hover:border-slate-700">
-                                <span>✍️ Access level: <strong id="lbl-autotext" class="text-slate-200">Auto Text</strong></span>
-                                <span class="text-[10px]">▼</span>
-                            </button>
-                            <div id="dropdown-autotext" class="dropdown-menu absolute left-0 mt-1 w-64 bg-[#161c28] border border-slate-800 rounded-xl p-3 shadow-xl z-50 text-xs space-y-2">
-                                <div onclick="selectAutoText('Approval')" class="p-2 rounded hover:bg-slate-800 cursor-pointer">
-                                    <div class="font-bold text-slate-200">Approval</div>
-                                    <div class="text-[10px] text-slate-400">Every task requires approval before it runs.</div>
-                                </div>
-                                <div onclick="selectAutoText('Auto Text')" class="p-2 rounded bg-purple-950/60 border border-purple-500/50 cursor-pointer">
-                                    <div class="font-bold text-purple-200 flex justify-between"><span>Auto Text</span><span>✓</span></div>
-                                    <div class="text-[10px] text-purple-300/80">Text generation runs automatically. Image/video generation requires approval.</div>
-                                </div>
-                                <div onclick="selectAutoText('Fully Automatic')" class="p-2 rounded hover:bg-slate-800 cursor-pointer">
-                                    <div class="font-bold text-slate-200">Fully Automatic</div>
-                                    <div class="text-[10px] text-slate-400">Plans and runs all generation tasks automatically without asking approval.</div>
-                                </div>
-                            </div>
+                <div class="bg-[#121722] border border-slate-800 rounded-2xl p-6 space-y-6 shadow-xl">
+                    <!-- Controls Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
+                        <div>
+                            <label class="block text-slate-400 font-semibold mb-2">Target Language</label>
+                            <select class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-slate-200 focus:outline-none focus:border-purple-500">
+                                <option>Urdu / Hindi</option>
+                                <option>English (US/UK)</option>
+                                <option>Arabic</option>
+                                <option>Spanish</option>
+                                <option>Turkish</option>
+                                <option>French</option>
+                            </select>
                         </div>
-
-                        <!-- AI Model Selector Dropdown -->
-                        <div class="relative ml-auto">
-                            <button onclick="toggleDropdown('dropdown-agent-model')" class="bg-purple-950/40 border border-purple-800/60 px-3 py-1.5 rounded-lg text-purple-300 flex items-center gap-1 font-semibold">
-                                <span id="lbl-agent-model">✦ DeepSeek V4.1 Flash</span>
-                                <span class="text-[10px]">▼</span>
-                            </button>
-                            <div id="dropdown-agent-model" class="dropdown-menu absolute right-0 mt-1 w-64 bg-[#161c28] border border-slate-800 rounded-xl p-2 shadow-2xl z-50 text-xs space-y-1">
-                                <div onclick="selectAgentModel('GPT 5.6 Sol', 'x1.00')" class="p-2 rounded hover:bg-slate-800 cursor-pointer flex justify-between text-slate-300"><span>GPT 5.6 Sol</span><span class="text-[10px] text-slate-500">x1.00</span></div>
-                                <div onclick="selectAgentModel('GPT 5.6 Terra', 'x0.50')" class="p-2 rounded hover:bg-slate-800 cursor-pointer flex justify-between text-slate-300"><span>GPT 5.6 Terra</span><span class="text-[10px] text-slate-500">x0.50</span></div>
-                                <div onclick="selectAgentModel('Gemini 3.8 Flash', 'x0.10')" class="p-2 rounded hover:bg-slate-800 cursor-pointer flex justify-between text-slate-300"><span>Gemini 3.8 Flash</span><span class="text-[10px] text-slate-500">x0.10</span></div>
-                                <div onclick="selectAgentModel('Gemini 3.1 Pro', 'x0.45')" class="p-2 rounded hover:bg-slate-800 cursor-pointer flex justify-between text-slate-300"><span>Gemini 3.1 Pro</span><span class="text-[10px] text-slate-500">x0.45</span></div>
-                                <div onclick="selectAgentModel('DeepSeek V4.1 Flash', 'x0.00')" class="p-2 rounded bg-purple-950/60 border border-purple-500/50 cursor-pointer flex justify-between text-purple-200 font-bold"><span>DeepSeek V4.1 Flash</span><span>✓ x0.00</span></div>
-                            </div>
+                        <div>
+                            <label class="block text-slate-400 font-semibold mb-2">Aspect Ratio / Dimension</label>
+                            <select id="gen-aspect-ratio" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-slate-200 focus:outline-none focus:border-purple-500">
+                                <option value="16:9">16:9 (YouTube Long / Cinema)</option>
+                                <option value="9:16">9:16 (Shorts / TikTok / Reels)</option>
+                                <option value="1:1">1:1 (Square Format)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 font-semibold mb-2">Episodes (1 to 200)</label>
+                            <input id="gen-episodes" type="number" min="1" max="200" value="1" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-slate-200 focus:outline-none focus:border-purple-500">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 font-semibold mb-2">Duration per Ep (1-200 Min)</label>
+                            <input id="gen-duration" type="number" min="1" max="200" value="3" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-slate-200 focus:outline-none focus:border-purple-500">
                         </div>
                     </div>
 
-                    <!-- Text Area Input -->
-                    <textarea id="agent-prompt-input" rows="4" placeholder="Describe your short film idea in one sentence, or try a skill..." class="w-full bg-slate-950/70 border border-slate-800 rounded-xl p-3 text-sm text-slate-100 focus:outline-none focus:border-purple-500 resize-none"></textarea>
-
-                    <!-- Quick Skill Chips Bar -->
-                    <div class="flex items-center justify-between pt-1">
-                        <div class="flex gap-2 text-xs overflow-x-auto pb-1">
-                            <button onclick="setAgentText('Generate realistic wasteland-style short film with automatic storyboarding.')" class="bg-slate-900 border border-slate-800 hover:border-purple-500 text-slate-300 px-3 py-1.5 rounded-xl whitespace-nowrap">⚡ Wasteland Shorts</button>
-                            <button onclick="setAgentText('Generate a cyberpunk CG cinematic short series.')" class="bg-slate-900 border border-slate-800 hover:border-purple-500 text-slate-300 px-3 py-1.5 rounded-xl whitespace-nowrap">⚡ Cyberpunk CG Animated Short</button>
-                            <button onclick="setAgentText('Create an immersive first-person video from a story idea.')" class="bg-slate-900 border border-slate-800 hover:border-purple-500 text-slate-300 px-3 py-1.5 rounded-xl whitespace-nowrap">⚡ POV Short Film</button>
-                            <button onclick="setAgentText('Help me create five characters in signature Pixar animation style.')" class="bg-slate-900 border border-slate-800 hover:border-purple-500 text-slate-300 px-3 py-1.5 rounded-xl whitespace-nowrap">⚡ Pixar Style</button>
-                        </div>
-                        <button onclick="alert('Sending task to AI Video Engine...')" class="bg-purple-600 hover:bg-purple-500 text-white font-bold px-6 py-2 rounded-xl text-xs shadow-lg">Send</button>
-                    </div>
-                </div>
-
-                <!-- Skills Catalog Tabs Section -->
-                <div class="space-y-4 pt-4">
-                    <div class="flex gap-6 text-xs font-semibold border-b border-slate-800 pb-2">
-                        <button onclick="setSkillTab(this)" class="skill-tab-btn pb-1 border-b-2 border-purple-500 text-purple-300">Featured</button>
-                        <button onclick="setSkillTab(this)" class="skill-tab-btn pb-1 border-b-2 border-transparent text-slate-400 hover:text-white">Idea to Short Video</button>
-                        <button onclick="setSkillTab(this)" class="skill-tab-btn pb-1 border-b-2 border-transparent text-slate-400 hover:text-white">Image Creation</button>
-                        <button onclick="setSkillTab(this)" class="skill-tab-btn pb-1 border-b-2 border-transparent text-slate-400 hover:text-white">Scriptwriting</button>
-                        <button onclick="setSkillTab(this)" class="skill-tab-btn pb-1 border-b-2 border-transparent text-slate-400 hover:text-white">All</button>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
-                        <div class="bg-[#121722] border border-slate-800 rounded-xl p-3 space-y-2 hover:border-purple-500/50 cursor-pointer transition group shadow-md">
-                            <div class="h-32 bg-slate-950 rounded-lg flex items-center justify-center text-4xl group-hover:scale-105 transition">🏜️</div>
-                            <div class="font-bold text-xs text-slate-200">Wasteland Shorts</div>
-                            <p class="text-[10px] text-slate-400 leading-relaxed">Generate realistic wasteland-style short films with automatic script setup.</p>
-                        </div>
-                        <div class="bg-[#121722] border border-slate-800 rounded-xl p-3 space-y-2 hover:border-purple-500/50 cursor-pointer transition group shadow-md">
-                            <div class="h-32 bg-slate-950 rounded-lg flex items-center justify-center text-4xl group-hover:scale-105 transition">🏙️</div>
-                            <div class="font-bold text-xs text-slate-200">Cyberpunk CG Animated</div>
-                            <p class="text-[10px] text-slate-400 leading-relaxed">Generate a cyberpunk CG cinematic short series from a single sentence.</p>
-                        </div>
-                        <div class="bg-[#121722] border border-slate-800 rounded-xl p-3 space-y-2 hover:border-purple-500/50 cursor-pointer transition group shadow-md">
-                            <div class="h-32 bg-slate-950 rounded-lg flex items-center justify-center text-4xl group-hover:scale-105 transition">🎥</div>
-                            <div class="font-bold text-xs text-slate-200">POV Short Film</div>
-                            <p class="text-[10px] text-slate-400 leading-relaxed">Create an immersive first-person video from a simple idea or script.</p>
-                        </div>
-                        <div class="bg-[#121722] border border-slate-800 rounded-xl p-3 space-y-2 hover:border-purple-500/50 cursor-pointer transition group shadow-md">
-                            <div class="h-32 bg-slate-950 rounded-lg flex items-center justify-center text-4xl group-hover:scale-105 transition">🎨</div>
-                            <div class="font-bold text-xs text-slate-200">Pixar Style</div>
-                            <p class="text-[10px] text-slate-400 leading-relaxed">Help create characters in the signature Pixar animation style.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ================= PAGE 4: ALL PROJECTS VIEW (EXACT REPLICA) ================= -->
-            <section id="sec-all-projects" class="page-section p-8 max-w-7xl mx-auto w-full space-y-6">
-                <!-- Top Filter Header Bar -->
-                <div class="flex flex-wrap justify-between items-center gap-4 border-b border-slate-800 pb-4">
-                    <div class="flex items-center space-x-6 text-xs font-semibold">
-                        <button onclick="switchNav('home')" class="text-slate-400 hover:text-white">&lt; Back</button>
-                        <button class="text-purple-300 border-b-2 border-purple-500 pb-1">All Projects (3)</button>
-                        <button class="text-slate-400 hover:text-white">AI Drama Studio (0)</button>
-                        <button class="text-slate-400 hover:text-white">Infinite Canvas (3)</button>
-                    </div>
-
-                    <div class="flex items-center space-x-3 text-xs">
-                        <!-- Project Status Filter Dropdown -->
-                        <div class="relative">
-                            <button onclick="toggleDropdown('dropdown-project-status')" class="bg-slate-900 border border-slate-800 px-3 py-2 rounded-xl text-slate-300 flex items-center space-x-2 hover:border-slate-700">
-                                <span id="lbl-project-status">Project status</span>
-                                <span class="text-[10px]">▼</span>
-                            </button>
-                            <div id="dropdown-project-status" class="dropdown-menu absolute right-0 mt-1 w-48 bg-[#161c28] border border-slate-800 rounded-xl p-2 shadow-xl z-50 space-y-1">
-                                <div onclick="selectProjectStatus('Project status')" class="px-3 py-2 rounded hover:bg-slate-800 cursor-pointer text-purple-300 font-bold">Project status</div>
-                                <div onclick="selectProjectStatus('Not started')" class="px-3 py-2 rounded hover:bg-slate-800 cursor-pointer text-slate-300">Not started</div>
-                                <div onclick="selectProjectStatus('In progress')" class="px-3 py-2 rounded hover:bg-slate-800 cursor-pointer text-slate-300">In progress</div>
-                                <div onclick="selectProjectStatus('First Draft Delivered')" class="px-3 py-2 rounded hover:bg-slate-800 cursor-pointer text-slate-300">First Draft Delivered</div>
-                                <div onclick="selectProjectStatus('Completed')" class="px-3 py-2 rounded hover:bg-slate-800 cursor-pointer text-slate-300">Completed</div>
-                            </div>
-                        </div>
-
-                        <!-- Project Search Bar -->
-                        <input type="text" placeholder="Please enter a project name" class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-purple-500 w-56">
-                    </div>
-                </div>
-
-                <!-- Projects Display Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                    <div class="bg-[#121722] border border-slate-800 rounded-2xl p-5 space-y-4 hover:border-purple-500/50 transition cursor-pointer shadow-lg group">
-                        <div class="text-[11px] font-semibold text-purple-400">Infinite Canvas</div>
-                        <div class="h-36 bg-slate-950 rounded-xl border border-slate-800/80 flex items-center justify-center text-4xl group-hover:scale-105 transition">📁</div>
-                        <div class="space-y-1">
-                            <div class="font-bold text-sm text-slate-100">Untitled Project 3</div>
-                            <div class="text-[10px] text-slate-500">Created by: — 2026-11-02 23:37:49</div>
-                        </div>
-                    </div>
-                    <div class="bg-[#121722] border border-slate-800 rounded-2xl p-5 space-y-4 hover:border-purple-500/50 transition cursor-pointer shadow-lg group">
-                        <div class="text-[11px] font-semibold text-purple-400">Infinite Canvas</div>
-                        <div class="h-36 bg-slate-950 rounded-xl border border-slate-800/80 flex items-center justify-center text-4xl group-hover:scale-105 transition">📁</div>
-                        <div class="space-y-1">
-                            <div class="font-bold text-sm text-slate-100">Untitled Project 2</div>
-                            <div class="text-[10px] text-slate-500">Created by: — 2026-11-02 11:31:39</div>
-                        </div>
-                    </div>
-                    <div class="bg-[#121722] border border-slate-800 rounded-2xl p-5 space-y-4 hover:border-purple-500/50 transition cursor-pointer shadow-lg group">
-                        <div class="text-[11px] font-semibold text-purple-400">Infinite Canvas</div>
-                        <div class="h-36 bg-slate-950 rounded-xl border border-slate-800/80 flex items-center justify-center text-4xl group-hover:scale-105 transition">📁</div>
-                        <div class="space-y-1">
-                            <div class="font-bold text-sm text-slate-100">Untitled Project</div>
-                            <div class="text-[10px] text-slate-500">Created by: — 2026-11-02 10:47:16</div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ================= PAGE 5: ASSET LIBRARY VIEW (EXACT REPLICA) ================= -->
-            <section id="sec-asset" class="page-section p-8 max-w-7xl mx-auto w-full space-y-6">
-                <!-- Top Library Type Toggle -->
-                <div class="flex items-center space-x-6 border-b border-slate-800 pb-3">
-                    <h1 id="tab-official-asset" onclick="switchAssetLibrary('official')" class="text-xl font-bold cursor-pointer text-white border-b-2 border-purple-500 pb-1">
-                        Official Asset Library
-                    </h1>
-                    <h1 id="tab-team-asset" onclick="switchAssetLibrary('team')" class="text-xl font-bold cursor-pointer text-slate-400 hover:text-white flex items-center gap-2">
-                        <span>Team Asset Library</span>
-                        <span class="text-[10px] bg-purple-900/60 text-purple-300 border border-purple-800/60 px-2 py-0.5 rounded-full font-normal">Team Reuse</span>
-                    </h1>
-                </div>
-
-                <!-- Sub View A: Official Library View -->
-                <div id="sub-official-asset" class="space-y-6">
-                    <div class="flex justify-between items-center border-b border-slate-800/60 pb-3 text-xs">
-                        <div class="flex space-x-6 font-semibold text-slate-400">
-                            <button onclick="setAssetCategory(this)" class="asset-cat-btn text-purple-400 font-bold border-b border-purple-400 pb-1">Character</button>
-                            <button onclick="setAssetCategory(this)" class="asset-cat-btn hover:text-white">Scene</button>
-                            <button onclick="setAssetCategory(this)" class="asset-cat-btn hover:text-white">Prop</button>
-                            <button onclick="setAssetCategory(this)" class="asset-cat-btn hover:text-white">Templates</button>
-                        </div>
-                        <span class="text-[11px] text-slate-500">Copyright Notice ℹ️</span>
-                    </div>
-
-                    <!-- Layout: Folders Tree Sidebar + Cards Grid -->
-                    <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
-                        <div class="md:col-span-1 bg-[#121722] border border-slate-800 rounded-2xl p-4 space-y-3 h-fit">
-                            <div class="flex justify-between items-center text-xs font-bold text-slate-300 pb-2 border-b border-slate-800">
-                                <span>Character Image</span>
-                                <button class="text-slate-500 hover:text-white">🔍</button>
-                            </div>
-                            <div class="space-y-1 text-xs">
-                                <button class="w-full flex items-center space-x-2 px-3 py-2 rounded-xl text-left bg-purple-950/60 border border-purple-800/60 text-purple-300 font-semibold">
-                                    <span>📁</span><span class="truncate">All Character</span>
-                                </button>
-                                <button class="w-full flex items-center space-x-2 px-3 py-2 rounded-xl text-left text-slate-400 hover:bg-slate-800/60">
-                                    <span>📁</span><span class="truncate">AI Human-Modern City</span>
-                                </button>
-                                <button class="w-full flex items-center space-x-2 px-3 py-2 rounded-xl text-left text-slate-400 hover:bg-slate-800/60">
-                                    <span>📁</span><span class="truncate">AI Human-Middle Ages</span>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="md:col-span-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
-                            <div class="bg-[#121722] border border-slate-800 rounded-2xl p-3 space-y-2 hover:border-purple-500/50 transition cursor-pointer group shadow-md">
-                                <div class="h-44 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-center text-5xl group-hover:scale-105 transition">🤵</div>
-                                <div class="text-center font-bold text-xs text-slate-200 truncate">Noble in Blue Velvet Suit</div>
-                            </div>
-                            <div class="bg-[#121722] border border-slate-800 rounded-2xl p-3 space-y-2 hover:border-purple-500/50 transition cursor-pointer group shadow-md">
-                                <div class="h-44 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-center text-5xl group-hover:scale-105 transition">👸</div>
-                                <div class="text-center font-bold text-xs text-slate-200 truncate">Noblewoman in White</div>
-                            </div>
-                            <div class="bg-[#121722] border border-slate-800 rounded-2xl p-3 space-y-2 hover:border-purple-500/50 transition cursor-pointer group shadow-md">
-                                <div class="h-44 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-center text-5xl group-hover:scale-105 transition">🧙‍♂️</div>
-                                <div class="text-center font-bold text-xs text-slate-200 truncate">Bespectacled Scholar</div>
-                            </div>
-                            <div class="bg-[#121722] border border-slate-800 rounded-2xl p-3 space-y-2 hover:border-purple-500/50 transition cursor-pointer group shadow-md">
-                                <div class="h-44 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-center text-5xl group-hover:scale-105 transition">🤴</div>
-                                <div class="text-center font-bold text-xs text-slate-200 truncate">Blond Noble</div>
-                            </div>
-                            <div class="bg-[#121722] border border-slate-800 rounded-2xl p-3 space-y-2 hover:border-purple-500/50 transition cursor-pointer group shadow-md">
-                                <div class="h-44 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-center text-5xl group-hover:scale-105 transition">👨‍⚕️</div>
-                                <div class="text-center font-bold text-xs text-slate-200 truncate">Doctor</div>
-                            </div>
-                            <div class="bg-[#121722] border border-slate-800 rounded-2xl p-3 space-y-2 hover:border-purple-500/50 transition cursor-pointer group shadow-md">
-                                <div class="h-44 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-center text-5xl group-hover:scale-105 transition">👩‍💼</div>
-                                <div class="text-center font-bold text-xs text-slate-200 truncate">Assistant</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Sub View B: Team Library Pro Lock View -->
-                <div id="sub-team-asset" class="hidden py-20 text-center space-y-4 max-w-md mx-auto">
-                    <div class="w-16 h-16 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center text-3xl mx-auto text-slate-500 shadow-xl">
-                        🖼️
-                    </div>
-                    <div class="space-y-1">
-                        <h3 class="text-lg font-bold text-white">Team Asset Library is a Pro perk.</h3>
-                        <p class="text-xs text-slate-400">Upgrade your plan to unlock team asset sharing and shared character templates.</p>
-                    </div>
-                    <button onclick="toggleModal('credits-modal')" class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold text-xs px-6 py-2.5 rounded-xl shadow-lg hover:opacity-90 transition">
-                        Upgrade to use it
-                    </button>
-                </div>
-            </section>
-
-            <!-- ================= PAGE 6: TEAM MANAGEMENT VIEW (EXACT REPLICA) ================= -->
-            <section id="sec-team-mgmt" class="page-section p-8 max-w-6xl mx-auto w-full space-y-10">
-                <!-- Promo Header Banner -->
-                <div class="bg-gradient-to-r from-purple-950/80 via-slate-900 to-purple-950/60 border border-purple-500/30 rounded-3xl p-8 space-y-6 shadow-2xl relative overflow-hidden">
-                    <div class="max-w-2xl space-y-4">
-                        <h1 class="text-2xl font-black text-white leading-tight">
-                            Multi-user collaboration, asset sharing, and controllable costs to comprehensively boost AI team productivity.
-                        </h1>
-                        <div class="flex items-center space-x-4 pt-2">
-                            <button onclick="toggleModal('credits-modal')" class="bg-white text-slate-950 font-bold px-6 py-3 rounded-xl text-xs hover:bg-slate-200 transition shadow-lg flex items-center space-x-2">
-                                <span>🛒</span><span>Unlock Now</span>
-                            </button>
-                            <button onclick="alert('Contacting Enterprise Sales...')" class="bg-slate-900/80 border border-slate-700 hover:border-purple-500 text-slate-200 font-semibold px-6 py-3 rounded-xl text-xs transition">
-                                💬 Contact us
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Feature Highlights Cards Grid -->
-                <div class="space-y-6">
-                    <div class="text-center">
-                        <span class="text-xs font-bold text-purple-400 uppercase tracking-widest bg-purple-950/60 border border-purple-800/50 px-4 py-1.5 rounded-full">
-                            ✨ Feature Highlights
-                        </span>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="bg-[#121722] border border-slate-800 rounded-2xl p-6 space-y-4 hover:border-purple-500/40 transition shadow-xl">
-                            <div class="h-44 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-center text-4xl">👥</div>
-                            <div class="space-y-2">
-                                <h3 class="font-bold text-base text-white">Collaborate with your team for more efficient creation</h3>
-                                <p class="text-xs text-slate-400 leading-relaxed">Flexible team assignments and multi-project collaboration—no more working alone.</p>
-                            </div>
-                        </div>
-
-                        <div class="bg-[#121722] border border-slate-800 rounded-2xl p-6 space-y-4 hover:border-purple-500/40 transition shadow-xl">
-                            <div class="h-44 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-center text-4xl">⚙️</div>
-                            <div class="space-y-2">
-                                <h3 class="font-bold text-base text-white">Dedicated workflows for better creations</h3>
-                                <p class="text-xs text-slate-400 leading-relaxed">Build team-specific AI creation workflows to easily reproduce great results.</p>
-                            </div>
-                        </div>
-
-                        <div class="bg-[#121722] border border-slate-800 rounded-2xl p-6 space-y-4 hover:border-purple-500/40 transition shadow-xl">
-                            <div class="h-44 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-center text-4xl">🖼️</div>
-                            <div class="space-y-2">
-                                <h3 class="font-bold text-base text-white">Share assets, let no creativity go to waste</h3>
-                                <p class="text-xs text-slate-400 leading-relaxed">Centralize characters, scenes, and assets for team sharing and cross-project reuse.</p>
-                            </div>
-                        </div>
-
-                        <div class="bg-[#121722] border border-slate-800 rounded-2xl p-6 space-y-4 hover:border-purple-500/40 transition shadow-xl">
-                            <div class="h-44 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-center text-4xl">📊</div>
-                            <div class="space-y-2">
-                                <h3 class="font-bold text-base text-white">Manage credits centrally for better cost control</h3>
-                                <p class="text-xs text-slate-400 leading-relaxed">Flexibly allocate team credits and monitor them in real time with the Dashboard, so every credit spent is clearly tracked.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ================= PAGE 7: PAYOUTS & WALLETS VIEW ================= -->
-            <section id="sec-payouts" class="page-section p-8 max-w-4xl mx-auto w-full space-y-6">
-                <h1 class="text-2xl font-bold text-white">💳 Local Payment Methods & Withdrawals</h1>
-                <div class="bg-[#121722] border border-slate-800 rounded-2xl p-6 space-y-4 shadow-xl">
-                    <div class="text-xs text-slate-400">Select withdrawal wallet:</div>
-                    <div class="flex gap-4">
-                        <button onclick="alert('SadaPay wallet connected.')" class="px-5 py-2.5 rounded-xl text-xs font-bold border bg-purple-600 text-white border-purple-500 shadow-md">SadaPay</button>
-                        <button onclick="alert('EasyPaisa wallet selected.')" class="px-5 py-2.5 rounded-xl text-xs font-bold border bg-slate-950 border-slate-800 text-slate-400 hover:text-white">EasyPaisa</button>
-                        <button onclick="alert('JazzCash wallet selected.')" class="px-5 py-2.5 rounded-xl text-xs font-bold border bg-slate-950 border-slate-800 text-slate-400 hover:text-white">JazzCash</button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ================= PAGE 8: OWNER ACCESS MODE VIEW ================= -->
-            <section id="sec-owner" class="page-section p-8 max-w-md mx-auto w-full space-y-6 text-center py-20">
-                <div class="w-16 h-16 rounded-2xl bg-purple-950/60 border border-purple-500/40 flex items-center justify-center text-3xl mx-auto text-purple-300 shadow-2xl">🔐</div>
-                <h1 class="text-xl font-bold text-white">Owner Access Control</h1>
-                <div class="space-y-4">
-                    <input id="admin-pass" type="password" placeholder="Enter Owner Password" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-purple-500">
-                    <button onclick="verifyAdmin()" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 rounded-xl text-xs shadow-lg">Verify & Unlock</button>
-                </div>
-                <div id="owner-status" class="hidden bg-emerald-950/40 border border-emerald-500/40 p-3 rounded-xl text-emerald-300 text-xs font-bold">
-                    ✓ Owner Mode Active (Zohaib Rajpoot)
-                </div>
-            </section>
-
-        </div>
-    </div>
-
-    <!-- MODAL 1: SCRIPT SETTINGS FULLSCREEN MODAL (EXACT REPLICA FROM SCREENSHOT 5) -->
-    <div id="script-settings-modal" class="modal-overlay fixed inset-0 bg-black/90 backdrop-blur-md z-50 items-center justify-center p-6">
-        <div class="bg-[#121722] border border-slate-800 rounded-3xl w-full max-w-4xl p-8 space-y-6 relative shadow-2xl">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-4">
-                <h2 class="text-xl font-bold text-white">Script settings</h2>
-                <button onclick="toggleModal('script-settings-modal')" class="text-slate-400 hover:text-white font-bold text-xl">✕</button>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                <div class="space-y-4">
+                    <!-- Topic Presets -->
                     <div>
-                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Genre</label>
-                        <div class="space-y-2">
-                            <button class="w-full bg-purple-950/60 border border-purple-500 text-purple-200 font-bold p-3 rounded-xl text-left text-sm">Auto</button>
-                            <button class="w-full bg-slate-950 border border-slate-800 text-slate-400 p-3 rounded-xl text-left text-sm hover:border-slate-700">Billionaire Elite</button>
+                        <label class="block text-xs text-slate-400 font-semibold mb-2">Genre & Topic Selection</label>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="setTopicPrompt('Islamic Historical Documentary: Empires and Battles in 4K details')" class="bg-slate-900 border border-slate-800 text-slate-300 px-3 py-1.5 rounded-xl text-xs hover:border-purple-500">🕌 Islamic History</button>
+                            <button onclick="setTopicPrompt('Luxury Supercar Manufacturing & Assembly Line Showcase')" class="bg-slate-900 border border-slate-800 text-slate-300 px-3 py-1.5 rounded-xl text-xs hover:border-purple-500">🏎️ Luxury Cars</button>
+                            <button onclick="setTopicPrompt('Funny Animals with Human Voices and Hilarious Dialogues')" class="bg-slate-900 border border-slate-800 text-slate-300 px-3 py-1.5 rounded-xl text-xs hover:border-purple-500">🐱 Funny Animals</button>
+                            <button onclick="setTopicPrompt('Deep Space Exploration: Wormholes and Galaxy Mysteries')" class="bg-slate-900 border border-slate-800 text-slate-300 px-3 py-1.5 rounded-xl text-xs hover:border-purple-500">🌌 Space Mysteries</button>
+                            <button onclick="setTopicPrompt('Supernatural Horror Haunted Mansion Short Film')" class="bg-slate-900 border border-slate-800 text-slate-300 px-3 py-1.5 rounded-xl text-xs hover:border-purple-500">☠️ Horror / Scary</button>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-3 gap-3 text-xs">
-                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-center">
-                            <div class="text-[10px] text-slate-500">Target Audience</div>
-                            <div class="font-bold text-slate-300 mt-1">Auto-adapt</div>
-                        </div>
-                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-center">
-                            <div class="text-[10px] text-slate-500">Emotional Highlights</div>
-                            <div class="font-bold text-slate-300 mt-1">Auto</div>
-                        </div>
-                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-center">
-                            <div class="text-[10px] text-slate-500">Story Progression</div>
-                            <div class="font-bold text-slate-300 mt-1">Auto</div>
-                        </div>
-                    </div>
+                    <!-- Prompt Textarea -->
+                    <textarea id="gen-prompt" rows="4" placeholder="Type prompt idea, drama storyline, or video concept..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-xs text-slate-100 focus:outline-none focus:border-purple-500 resize-none"></textarea>
+
+                    <button onclick="handleGenerationRequest()" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold py-3 rounded-xl text-xs shadow-lg transition">⚡ Start AI Generation Process</button>
+                </div>
+            </section>
+
+            <!-- 3. VIRAL AI AGENT VIEW -->
+            <section id="sec-viral-agent" class="page-section p-8 max-w-5xl mx-auto w-full space-y-6">
+                <div class="space-y-2">
+                    <h1 class="text-2xl font-bold text-white">🚀 AI Viral Trend Analyzer</h1>
+                    <p class="text-xs text-slate-400">Generate high-converting scripts and research trending viral concepts.</p>
                 </div>
 
-                <!-- Animated Color Sphere Visual Preview -->
-                <div class="flex justify-center items-center py-6">
-                    <div class="w-64 h-64 rounded-full bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 shadow-2xl shadow-purple-900/50 flex items-center justify-center animate-pulse">
-                        <div class="text-center space-y-1">
-                            <div class="text-2xl font-black text-white">ZR Studio</div>
-                            <div class="text-xs text-purple-200">AI Adaptation Engine</div>
-                        </div>
+                <div class="bg-[#121722] border border-slate-800 rounded-2xl p-6 space-y-4 shadow-xl">
+                    <div class="h-48 bg-slate-950 rounded-xl p-4 border border-slate-800 text-xs space-y-2 overflow-y-auto">
+                        <div class="text-purple-400 font-bold">🤖 ReelMate Assistant:</div>
+                        <div class="text-slate-300">Ready for trend analysis! Specify your target niche (e.g., Space Secrets, Luxury Cars, Horror Stories, or Animal Animation).</div>
+                    </div>
+                    <div class="flex gap-2">
+                        <input id="agent-input" type="text" placeholder="Enter keyword or category..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-slate-100 focus:outline-none focus:border-purple-500">
+                        <button onclick="alert('Analyzing viral data...')" class="bg-purple-600 text-white font-bold px-6 py-3 rounded-xl text-xs">Analyze Trends</button>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <div class="flex justify-end border-t border-slate-800 pt-4">
-                <button onclick="toggleModal('script-settings-modal')" class="bg-purple-600 hover:bg-purple-500 text-white font-bold px-8 py-3 rounded-xl text-xs shadow-lg">Save & Apply Settings</button>
-            </div>
+            <!-- 4. 4K DOWNLOADER VIEW -->
+            <section id="sec-downloader" class="page-section p-8 max-w-4xl mx-auto w-full space-y-6">
+                <div class="space-y-2">
+                    <h1 class="text-2xl font-bold text-white">📥 4K No-Watermark Downloader</h1>
+                    <p class="text-xs text-slate-400">Extract high-quality video files from social platforms.</p>
+                </div>
+
+                <div class="bg-[#121722] border border-slate-800 rounded-2xl p-6 space-y-4 shadow-xl">
+                    <input type="text" placeholder="Paste link (TikTok / Instagram / YouTube)..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-xs text-slate-100 focus:outline-none focus:border-purple-500">
+                    <button onclick="alert('Processing 4K Download...')" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl text-xs shadow-lg">Download 4K Media</button>
+                </div>
+            </section>
+
+            <!-- 5. GLOBAL SUBSCRIPTION VIEW -->
+            <section id="sec-pricing" class="page-section p-8 max-w-4xl mx-auto w-full space-y-6">
+                <div class="text-center space-y-2">
+                    <h1 class="text-3xl font-extrabold text-white">Global Payment Checkout</h1>
+                    <p class="text-xs text-slate-400">Supports Credit/Debit Cards, PayPal & Payoneer Transfer.</p>
+                </div>
+
+                <div class="bg-[#121722] border border-slate-800 rounded-3xl p-8 space-y-6 shadow-2xl">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                        <div>
+                            <h3 class="font-bold text-white text-base">Pro Unlimited Studio Pass</h3>
+                            <p class="text-xs text-slate-400">Full Access to 1-200 Episodes & 1-200 Min Video Generations</p>
+                        </div>
+                        <div class="text-xl font-black text-purple-400">$29.00 / mo</div>
+                    </div>
+
+                    <form onsubmit="handleCreditCardPayment(event)" class="space-y-4 text-xs">
+                        <div class="grid grid-cols-3 gap-2 pb-2">
+                            <button type="button" class="p-3 bg-purple-950 border border-purple-600 rounded-xl font-bold text-purple-200 text-center">💳 Credit Card</button>
+                            <button type="button" onclick="alert('Redirecting to PayPal Checkout...')" class="p-3 bg-slate-950 border border-slate-800 rounded-xl font-bold text-slate-400 text-center">🅿️ PayPal</button>
+                            <button type="button" onclick="alert('Redirecting to Payoneer Checkout...')" class="p-3 bg-slate-950 border border-slate-800 rounded-xl font-bold text-slate-400 text-center">🅿️ Payoneer</button>
+                        </div>
+
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Cardholder Name</label>
+                            <input type="text" required placeholder="Name on Card" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Card Number (Visa / MasterCard / Amex)</label>
+                            <input type="text" required maxlength="19" placeholder="4000 0000 0000 0000" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-slate-300 font-semibold mb-1">Expiry Date (MM/YY)</label>
+                                <input type="text" required maxlength="5" placeholder="12/28" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500">
+                            </div>
+                            <div>
+                                <label class="block text-slate-300 font-semibold mb-1">CVV / CVC Code</label>
+                                <input type="password" required maxlength="4" placeholder="123" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold py-3 rounded-xl shadow-lg transition">Complete Payment & Activate Pro Access</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- 6. PRIVACY & SECURITY VIEW -->
+            <section id="sec-privacy" class="page-section p-8 max-w-4xl mx-auto w-full space-y-6">
+                <h1 class="text-2xl font-bold text-white">Security Standards</h1>
+                <div class="bg-[#121722] border border-slate-800 p-6 rounded-xl text-xs text-slate-400 space-y-3 leading-relaxed">
+                    <p>ReelMate AI Pro Studio utilizes end-to-end 256-bit SSL encryption, isolating user authentication data and protecting media assets against external interception.</p>
+                </div>
+            </section>
+
+            <!-- 7. SECRET ADMIN VIEW -->
+            <section id="sec-owner" class="page-section p-8 max-w-md mx-auto w-full space-y-6 text-center py-20">
+                <div class="text-4xl">🔐</div>
+                <h1 class="text-xl font-bold text-white">Admin System Access</h1>
+                <div class="space-y-4">
+                    <input id="admin-pass" type="password" placeholder="Enter System Admin Code" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-purple-500">
+                    <button onclick="verifyAdmin()" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 rounded-xl text-xs shadow-lg">Verify Admin Code</button>
+                </div>
+            </section>
         </div>
     </div>
 
-    <!-- MODAL 2: CREDITS / PRICING MODAL -->
-    <div id="credits-modal" class="modal-overlay fixed inset-0 bg-black/80 backdrop-blur-sm z-50 items-center justify-center p-6">
-        <div class="bg-[#121722] border border-slate-800 rounded-3xl w-full max-w-lg p-6 space-y-6 relative shadow-2xl">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                <h3 class="text-lg font-bold text-white">⚡ Pricing & Credits Upgrade</h3>
-                <button onclick="toggleModal('credits-modal')" class="text-slate-400 hover:text-white font-bold">✕</button>
-            </div>
-            <div class="space-y-4">
-                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-center space-y-1">
-                    <div class="text-xs text-slate-400">Current Balance</div>
-                    <div class="text-3xl font-black text-purple-400">0 Credits</div>
-                </div>
-                <button onclick="alert('Redirecting to payment checkout...')" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3 rounded-xl text-xs shadow-lg">
-                    Recharge Credits Now
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Pure JavaScript Universal Router & State Controller -->
+    <!-- Router & Core Logic Scripts -->
     <script>
-        function switchNav(navId) {
-            // Hide all sections
-            document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
+        let isProUser = false;
+        let isOwner = false;
 
-            // Remove active styling from all menu buttons
+        function switchNav(navId) {
+            document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.classList.remove('bg-gradient-to-r', 'from-purple-600/30', 'to-indigo-600/20', 'text-purple-300', 'border', 'border-purple-500/30', 'font-semibold');
                 btn.classList.add('text-slate-400');
             });
 
-            // Show target view
-            const targetSection = document.getElementById('sec-' + navId);
-            if (targetSection) {
-                targetSection.classList.add('active');
+            const activeSection = document.getElementById('sec-' + navId);
+            if (activeSection) {
+                activeSection.classList.add('active');
             }
 
-            // Apply active button styling
-            const targetBtn = document.getElementById('btn-' + navId);
-            if (targetBtn) {
-                targetBtn.classList.add('bg-gradient-to-r', 'from-purple-600/30', 'to-indigo-600/20', 'text-purple-300', 'border', 'border-purple-500/30', 'font-semibold');
-                targetBtn.classList.remove('text-slate-400');
+            const activeBtn = document.getElementById('btn-' + navId);
+            if (activeBtn) {
+                activeBtn.classList.add('bg-gradient-to-r', 'from-purple-600/30', 'to-indigo-600/20', 'text-purple-300', 'border', 'border-purple-500/30', 'font-semibold');
             }
 
-            // Update header breadcrumb
             document.getElementById('header-nav-title').innerText = navId.replace('-', ' ');
-            
-            // Close any open dropdowns
-            closeAllDropdowns();
         }
 
-        function toggleDropdown(dropdownId) {
-            const el = document.getElementById(dropdownId);
-            const isVisible = el.classList.contains('show');
-            closeAllDropdowns();
-            if (!isVisible) el.classList.add('show');
+        function handleUserSignUp(e) {
+            e.preventDefault();
+            const name = document.getElementById('user-fullname').value;
+            document.getElementById('active-user-name').innerText = name;
+            document.getElementById('auth-modal').style.display = 'none';
+            alert('Welcome ' + name + '! 3-Day Trial is active for short videos (1-5 min). Subscribe via Card/PayPal to unlock 200 episodes.');
         }
 
-        function closeAllDropdowns() {
-            document.querySelectorAll('.dropdown-menu').forEach(d => d.classList.remove('show'));
-        }
-
-        function toggleModal(modalId) {
-            const modal = document.getElementById(modalId);
-            modal.classList.toggle('show');
-        }
-
-        // Script Studio Dropdown Selectors
-        function selectMarket(val) {
-            document.getElementById('lbl-market').innerText = val;
-            closeAllDropdowns();
-        }
-
-        function selectAdaptation(val) {
-            document.getElementById('lbl-adaptation').innerText = val;
-            closeAllDropdowns();
-        }
-
-        function selectRange(val) {
-            document.getElementById('lbl-range').innerText = val;
-            closeAllDropdowns();
-        }
-
-        function selectScriptModel(val) {
-            document.getElementById('lbl-script-model').innerText = '✦ ' + val;
-            closeAllDropdowns();
-        }
-
-        function setScriptText(text) {
-            document.getElementById('script-textarea').value = text;
-        }
-
-        function setScriptTag(btnEl) {
-            document.querySelectorAll('.tag-btn').forEach(b => {
-                b.className = 'tag-btn px-3 py-1 rounded-lg text-xs transition text-slate-400 hover:text-slate-200';
-            });
-            btnEl.className = 'tag-btn px-3 py-1 rounded-lg text-xs transition bg-purple-900/60 border border-purple-500 text-purple-200 font-semibold';
-        }
-
-        // AI Agent Selectors
-        function selectAutoText(val) {
-            document.getElementById('lbl-autotext').innerText = val;
-            closeAllDropdowns();
-        }
-
-        function selectAgentModel(val, mult) {
-            document.getElementById('lbl-agent-model').innerText = '✦ ' + val;
-            closeAllDropdowns();
-        }
-
-        function setAgentText(text) {
-            document.getElementById('agent-prompt-input').value = text;
-        }
-
-        function setSkillTab(btnEl) {
-            document.querySelectorAll('.skill-tab-btn').forEach(b => {
-                b.className = 'skill-tab-btn pb-1 border-b-2 border-transparent text-slate-400 hover:text-white';
-            });
-            btnEl.className = 'skill-tab-btn pb-1 border-b-2 border-purple-500 text-purple-300 font-bold';
-        }
-
-        // Asset Library Switcher
-        function switchAssetLibrary(type) {
-            const officialDiv = document.getElementById('sub-official-asset');
-            const teamDiv = document.getElementById('sub-team-asset');
-            const officialTab = document.getElementById('tab-official-asset');
-            const teamTab = document.getElementById('tab-team-asset');
-
-            if (type === 'official') {
-                officialDiv.classList.remove('hidden');
-                teamDiv.classList.add('hidden');
-                officialTab.className = 'text-xl font-bold cursor-pointer text-white border-b-2 border-purple-500 pb-1';
-                teamTab.className = 'text-xl font-bold cursor-pointer text-slate-400 hover:text-white flex items-center gap-2';
-            } else {
-                officialDiv.classList.add('hidden');
-                teamDiv.classList.remove('hidden');
-                officialTab.className = 'text-xl font-bold cursor-pointer text-slate-400 hover:text-white';
-                teamTab.className = 'text-xl font-bold cursor-pointer text-white border-b-2 border-purple-500 pb-1 flex items-center gap-2';
-            }
-        }
-
-        function setAssetCategory(btnEl) {
-            document.querySelectorAll('.asset-cat-btn').forEach(b => {
-                b.className = 'asset-cat-btn hover:text-white';
-            });
-            btnEl.className = 'asset-cat-btn text-purple-400 font-bold border-b border-purple-400 pb-1';
-        }
-
-        // Project Status Selector
-        function selectProjectStatus(val) {
-            document.getElementById('lbl-project-status').innerText = val;
-            closeAllDropdowns();
-        }
-
-        // Admin Security Check
-        function verifyAdmin() {
-            const pass = document.getElementById('admin-pass').value;
+        function bypassAsOwner() {
+            const pass = prompt('Enter Admin Password:');
             if (pass === 'ZR_Empire_9988#') {
-                document.getElementById('owner-status').classList.remove('hidden');
-                alert('Owner Access Granted! Welcome Zohaib Rajpoot.');
-            } else {
+                isProUser = true;
+                isOwner = true;
+                document.getElementById('active-user-name').innerText = 'System Admin';
+                document.getElementById('account-status-badge').innerText = '👑 Unlimited Free Pro Access';
+                document.getElementById('account-status-badge').className = 'px-3 py-2 bg-emerald-950/40 border border-emerald-500/30 rounded-xl text-[11px] text-emerald-300 font-bold text-center';
+                document.getElementById('auth-modal').style.display = 'none';
+                alert('Admin Access Granted!');
+            } else if (pass !== null) {
                 alert('Incorrect Password!');
             }
         }
 
-        // Close dropdowns on outside click
-        window.onclick = function(event) {
-            if (!event.target.closest('.relative')) {
-                closeAllDropdowns();
+        function handleGenerationRequest() {
+            const episodes = parseInt(document.getElementById('gen-episodes').value) || 1;
+            const duration = parseInt(document.getElementById('gen-duration').value) || 1;
+
+            if (!isProUser && !isOwner) {
+                if (episodes > 1 || duration > 5) {
+                    alert('⚠️ Trial Limit: Free tier supports short videos up to 5 min. Upgrade to Pro subscription to generate up to 200 episodes!');
+                    switchNav('pricing');
+                    return;
+                }
+            }
+
+            alert('🚀 Generation Engine Active!\n- Episodes: ' + episodes + '\n- Duration per Ep: ' + duration + ' min\n- Aspect Ratio: ' + document.getElementById('gen-aspect-ratio').value);
+        }
+
+        function handleCreditCardPayment(e) {
+            e.preventDefault();
+            alert('🔒 Verification in progress...');
+            setTimeout(() => {
+                isProUser = true;
+                document.getElementById('account-status-badge').innerText = '💎 Pro Access Active';
+                document.getElementById('account-status-badge').className = 'px-3 py-2 bg-emerald-950/40 border border-emerald-500/30 rounded-xl text-[11px] text-emerald-300 font-bold text-center';
+                alert('✓ Payment Successful! Unlimited 1-200 Episodes & Duration unlocked.');
+                switchNav('studio');
+            }, 1000);
+        }
+
+        function setTopicPrompt(promptText) {
+            document.getElementById('gen-prompt').value = promptText;
+        }
+
+        function verifyAdmin() {
+            const pass = document.getElementById('admin-pass').value;
+            if (pass === 'ZR_Empire_9988#') {
+                isProUser = true;
+                isOwner = true;
+                document.getElementById('active-user-name').innerText = 'System Admin';
+                document.getElementById('account-status-badge').innerText = '👑 Unlimited Free Pro Access';
+                document.getElementById('account-status-badge').className = 'px-3 py-2 bg-emerald-950/40 border border-emerald-500/30 rounded-xl text-[11px] text-emerald-300 font-bold text-center';
+                alert('Admin Access Granted!');
+                switchNav('studio');
+            } else {
+                alert('Incorrect Password!');
             }
         }
     </script>
