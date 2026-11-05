@@ -6,11 +6,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const REPLICATE_API_TOKEN = process.env.REPLICATE_API_TOKEN || "r8_KSX**********************************
-
-
-
-";
+const REPLICATE_API_TOKEN = process.env.REPLICATE_API_TOKEN || "r8_KSX**********************************";
 // Main video generation endpoint
 app.post('/api/generate-video', async (req, res) => {
     const { prompt, episodes, duration, aspectRatio, language } = req.body;
