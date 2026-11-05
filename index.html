@@ -3,397 +3,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ReelMate AI Pro Studio - World AI Film & Drama Engine</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>ZR Film Draft - AI Video Studio & Free Downloader</title>
     <style>
-        .page-section { display: none; }
-        .page-section.active { display: block; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #0f172a; color: #f8fafc; line-height: 1.6; }
+        header { background: #1e293b; padding: 20px; text-align: center; border-bottom: 2px solid #3b82f6; }
+        header h1 { font-size: 2rem; color: #60a5fa; }
+        header p { color: #94a3b8; font-size: 0.9rem; }
+        
+        .container { max-width: 1100px; margin: 20px auto; padding: 0 15px; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; }
+        .tab-btn { padding: 12px 24px; background: #334155; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .tab-btn.active, .tab-btn:hover { background: #2563eb; }
+        
+        .panel { display: none; background: #1e293b; padding: 25px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .panel.active { display: block; }
+        
+        h2 { margin-bottom: 15px; color: #93c5fd; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; }
+        input, select, textarea { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #475569; background: #0f172a; color: #fff; }
+        textarea { height: 100px; resize: vertical; }
+        
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        
+        .btn-submit { display: block; width: 100%; padding: 12px; background: #10b981; color: white; border: none; border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 15px; }
+        .btn-submit:hover { background: #059669; }
+        
+        .ad-container { background: #334155; border: 2px dashed #64748b; padding: 15px; text-align: center; margin: 15px 0; border-radius: 8px; color: #cbd5e1; }
+        .output-box { margin-top: 20px; padding: 15px; background: #0f172a; border-radius: 6px; border-left: 4px solid #10b981; display: none; }
     </style>
 </head>
-<body class="bg-[#0b0e14] text-slate-100 font-sans antialiased selection:bg-purple-600 selection:text-white">
+<body>
 
-    <!-- AUTHENTICATION / SIGN UP MODAL -->
-    <div id="auth-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-[#121722] border border-slate-800 rounded-3xl p-8 max-w-md w-full space-y-6 shadow-2xl relative">
-            <div class="text-center space-y-2">
-                <div class="w-12 h-12 mx-auto rounded-2xl bg-gradient-to-tr from-purple-700 via-indigo-600 to-pink-600 flex items-center justify-center text-white font-black text-xl shadow-xl ring-2 ring-purple-500/30">
-                    RM
-                </div>
-                <h2 class="text-2xl font-black text-white tracking-tight">ReelMate AI Pro Studio</h2>
-                <p class="text-xs text-slate-400">Sign up to claim your 3-Day Free Trial (Short videos 1-5 mins).</p>
-            </div>
+    <header>
+        <h1>ZR FILM DRAFT</h1>
+        <p>Advanced AI Studio & HD/4K Video Downloader Platform</p>
+    </header>
 
-            <form onsubmit="handleUserSignUp(event)" class="space-y-4 text-xs">
-                <div>
-                    <label class="block text-slate-300 font-semibold mb-1">Full Name</label>
-                    <input id="user-fullname" type="text" required placeholder="Enter your full name" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500">
-                </div>
-                <div>
-                    <label class="block text-slate-300 font-semibold mb-1">Email Address</label>
-                    <input id="user-email" type="email" required placeholder="name@domain.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500">
-                </div>
-                <div>
-                    <label class="block text-slate-300 font-semibold mb-1">Password</label>
-                    <input type="password" required placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500">
-                </div>
-                <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold py-3 rounded-xl shadow-lg transition">Create Account & Start Trial</button>
-            </form>
-
-            <div class="pt-4 border-t border-slate-800/80 text-center">
-                <button onclick="bypassAsOwner()" class="text-[11px] text-purple-400 font-bold hover:underline">🔐 Admin Bypass Access</button>
-            </div>
+    <div class="container">
+        <!-- Navigation Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="openTab(event, 'drama')">Drama Studio</button>
+            <button class="tab-btn" onclick="openTab(event, 'film')">Film Studio</button>
+            <button class="tab-btn" onclick="openTab(event, 'downloader')">Free 4K Downloader</button>
         </div>
+
+        <!-- 1. Drama Studio -->
+        <div id="drama" class="panel active">
+            <h2>Drama Studio Generator</h2>
+            <div class="form-group">
+                <label>Scene Prompt / Concept:</label>
+                <textarea id="dramaPrompt" placeholder="Enter your drama scene description..."></textarea>
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>AI Script Refinement Model:</label>
+                    <select id="dramaModel">
+                        <option value="DeepSeek">DeepSeek AI</option>
+                        <option value="Gemini">Google Gemini</option>
+                        <option value="ChatGPT">OpenAI ChatGPT</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Style Mode:</label>
+                    <select id="dramaStyle">
+                        <option value="2D Animation">2D Animation</option>
+                        <option value="3D Cinematic Render">3D Cinematic Render</option>
+                        <option value="Realistic Live-Action">Realistic Live-Action</option>
+                    </select>
+                </div>
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Duration (Minutes):</label>
+                    <input type="number" value="5" min="1" max="20">
+                </div>
+                <div class="form-group">
+                    <label>Voiceover Language:</label>
+                    <select>
+                        <option value="Urdu">Urdu</option>
+                        <option value="English">English</option>
+                        <option value="Hindi">Hindi</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn-submit" onclick="generateVideo('Drama')">Generate Drama Video</button>
+        </div>
+
+        <!-- 2. Film Studio -->
+        <div id="film" class="panel">
+            <h2>Film Studio (Long-Form Cinematic Engine)</h2>
+            <div class="form-group">
+                <label>Storyboard & Movie Script:</label>
+                <textarea id="filmPrompt" placeholder="Paste full movie scene storyboard..."></textarea>
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Camera Movement Controls:</label>
+                    <select>
+                        <option>Pan Left to Right</option>
+                        <option>Zoom In Tracking Shot</option>
+                        <option>360 Orbit Shot</option>
+                        <option>Drone Overhead View</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Video Orientation / Rotation:</label>
+                    <select>
+                        <option>16:9 Landscape (Horizontal)</option>
+                        <option>9:16 Portrait (Vertical Shorts/Reels)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Movie Duration (1 to 200 Minutes):</label>
+                <input type="range" min="1" max="200" value="30" oninput="document.getElementById('durVal').innerText = this.value + ' Mins'">
+                <span id="durVal" style="color: #60a5fa; font-weight: bold;">30 Mins</span>
+            </div>
+            <button class="btn-submit" onclick="generateVideo('Film')">Generate Feature Film</button>
+        </div>
+
+        <!-- 3. Free HD/4K Video Downloader (Ad-Monetized) -->
+        <div id="downloader" class="panel">
+            <h2>Free HD/4K Video Downloader</h2>
+            <p style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 15px;">Download videos without watermarks instantly!</p>
+            
+            <div class="form-group">
+                <label>Paste Video Link (TikTok, YouTube, FB, Instagram):</label>
+                <input type="url" id="videoUrlInput" placeholder="https://..." required>
+            </div>
+
+            <!-- Adsterra Monetization Placeholder -->
+            <div class="ad-container">
+                <p><strong>[ Adsterra Banner Ad Unit Here ]</strong></p>
+                <span style="font-size: 0.8rem;">Ad script triggers automatically when download starts.</span>
+            </div>
+
+            <button class="btn-submit" style="background: #2563eb;" onclick="triggerDownload()">Start Free Download (HD/4K)</button>
+            
+            <div id="downloadResult" class="output-box"></div>
+        </div>
+
     </div>
 
-    <!-- MAIN APP STRUCTURE -->
-    <div class="flex h-screen w-screen overflow-hidden bg-[#0b0e14] relative">
-        
-        <!-- Left Navigation Sidebar -->
-        <aside class="w-64 bg-[#11151f] border-r border-slate-800/80 flex flex-col justify-between p-4 flex-shrink-0 z-10 overflow-y-auto">
-            <div class="space-y-6">
-                <!-- Professional Logo Header -->
-                <div class="flex items-center space-x-3 px-2 cursor-pointer group" onclick="switchNav('home')">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-700 via-indigo-600 to-pink-600 flex items-center justify-center font-black text-white shadow-xl ring-2 ring-purple-500/20 group-hover:scale-105 transition">
-                        <span class="tracking-tighter text-base">RM</span>
-                    </div>
-                    <div class="flex flex-col">
-                        <span class="font-extrabold text-sm tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-purple-300 leading-tight">ReelMate AI Pro</span>
-                        <span class="text-[10px] text-purple-400 font-semibold tracking-wider uppercase">Enterprise Film Studio</span>
-                    </div>
-                </div>
-
-                <!-- Main Navigation -->
-                <nav class="space-y-1 text-sm font-medium text-slate-400">
-                    <button id="btn-home" onclick="switchNav('home')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition bg-gradient-to-r from-purple-600/30 to-indigo-600/20 text-purple-300 border border-purple-500/30 font-semibold">
-                        <span>🏠</span><span>Home Studio</span>
-                    </button>
-                    <button id="btn-studio" onclick="switchNav('studio')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition hover:bg-slate-800/60 hover:text-slate-200">
-                        <span>🎬</span><span>Universal Generator</span>
-                    </button>
-                    <button id="btn-viral-agent" onclick="switchNav('viral-agent')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition hover:bg-slate-800/60 hover:text-slate-200">
-                        <span>🚀</span><span>Viral AI Agent</span>
-                    </button>
-                    <button id="btn-downloader" onclick="switchNav('downloader')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition hover:bg-slate-800/60 hover:text-slate-200">
-                        <span>📥</span><span>4K Video Downloader</span>
-                    </button>
-                </nav>
-
-                <!-- Billing & System Pages -->
-                <div class="pt-4 border-t border-slate-800/80 space-y-1">
-                    <span class="px-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Payments & Gateway</span>
-                    <button id="btn-pricing" onclick="switchNav('pricing')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm text-slate-400 hover:bg-slate-800/60">
-                        <span>💳</span><span>Global Subscription</span>
-                    </button>
-                    <button id="btn-privacy" onclick="switchNav('privacy')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm text-slate-400 hover:bg-slate-800/60">
-                        <span>🛡️</span><span>Security & Privacy</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Account & Security Status -->
-            <div class="pt-4 border-t border-slate-800/80 space-y-2">
-                <div id="account-status-badge" class="px-3 py-2 bg-purple-950/40 border border-purple-500/30 rounded-xl text-[11px] text-purple-300 font-bold text-center">
-                    ⏳ 3-Day Trial Active
-                </div>
-                <button id="btn-owner" onclick="switchNav('owner')" class="nav-btn w-full text-left px-3 py-2 text-xs rounded-lg transition bg-purple-950/40 border border-purple-700/50 text-purple-300 hover:bg-purple-900/40 font-bold">
-                    🔐 Secret Admin Portal
-                </button>
-            </div>
-        </aside>
-
-        <!-- Main Workspace -->
-        <div class="flex-1 flex flex-col h-full overflow-y-auto bg-[#0b0e14]">
-            <!-- Top Header -->
-            <header class="h-14 border-b border-slate-800/80 px-6 flex justify-between items-center bg-[#0d111a]/80 backdrop-blur sticky top-0 z-20">
-                <div class="text-xs text-slate-400 font-medium capitalize">
-                    ReelMate AI Pro &gt; <span id="header-nav-title" class="text-slate-200">Home Studio</span>
-                </div>
-                <div class="flex items-center space-x-4 text-slate-400 text-xs">
-                    <span id="active-user-name" class="font-bold text-slate-200">Guest User</span>
-                    <button onclick="switchNav('pricing')" class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold px-3 py-1 rounded-lg text-xs hover:opacity-90">Upgrade Pro</button>
-                </div>
-            </header>
-
-            <!-- 1. HOME VIEW -->
-            <section id="sec-home" class="page-section active p-8 max-w-6xl mx-auto w-full space-y-8">
-                <div class="space-y-2">
-                    <h1 class="text-3xl font-extrabold text-white">ReelMate AI Pro - Advanced Film Studio</h1>
-                    <p class="text-xs text-slate-400">Generate multi-episode dramas, cinematic short films, luxury car clips, documentaries & viral videos.</p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div onclick="switchNav('studio')" class="bg-[#121722] border border-slate-800 rounded-2xl p-6 space-y-4 hover:border-purple-500/60 transition cursor-pointer group shadow-xl">
-                        <div class="text-4xl">🎬</div>
-                        <h3 class="font-bold text-base text-white group-hover:text-purple-300">Universal Generator</h3>
-                        <p class="text-xs text-slate-400">1 to 200 Episodes & 1 to 200 Minutes duration selection with multi-genre AI modeling.</p>
-                    </div>
-
-                    <div onclick="switchNav('viral-agent')" class="bg-[#121722] border border-slate-800 rounded-2xl p-6 space-y-4 hover:border-purple-500/60 transition cursor-pointer group shadow-xl">
-                        <div class="text-4xl">🚀</div>
-                        <h3 class="font-bold text-base text-white group-hover:text-purple-300">Viral AI Prompt Assistant</h3>
-                        <p class="text-xs text-slate-400">Identify trending YouTube & TikTok topics with automated high-ranking prompts.</p>
-                    </div>
-
-                    <div onclick="switchNav('downloader')" class="bg-[#121722] border border-slate-800 rounded-2xl p-6 space-y-4 hover:border-purple-500/60 transition cursor-pointer group shadow-xl">
-                        <div class="text-4xl">📥</div>
-                        <h3 class="font-bold text-base text-white group-hover:text-purple-300">4K No-Watermark Downloader</h3>
-                        <p class="text-xs text-slate-400">Export high-resolution clips from TikTok, Instagram, YouTube & Facebook.</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 2. UNIVERSAL GENERATOR VIEW -->
-            <section id="sec-studio" class="page-section p-8 max-w-5xl mx-auto w-full space-y-6">
-                <div class="space-y-2">
-                    <h1 class="text-2xl font-bold text-white">Universal Video & Drama Generator</h1>
-                    <p class="text-xs text-slate-400">Specify language, aspect ratio (16:9 / 9:16), episode counts (1-200), and duration (1-200 min).</p>
-                </div>
-
-                <div class="bg-[#121722] border border-slate-800 rounded-2xl p-6 space-y-6 shadow-xl">
-                    <!-- Controls Grid -->
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
-                        <div>
-                            <label class="block text-slate-400 font-semibold mb-2">Target Language</label>
-                            <select class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-slate-200 focus:outline-none focus:border-purple-500">
-                                <option>Urdu / Hindi</option>
-                                <option>English (US/UK)</option>
-                                <option>Arabic</option>
-                                <option>Spanish</option>
-                                <option>Turkish</option>
-                                <option>French</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-slate-400 font-semibold mb-2">Aspect Ratio / Dimension</label>
-                            <select id="gen-aspect-ratio" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-slate-200 focus:outline-none focus:border-purple-500">
-                                <option value="16:9">16:9 (YouTube Long / Cinema)</option>
-                                <option value="9:16">9:16 (Shorts / TikTok / Reels)</option>
-                                <option value="1:1">1:1 (Square Format)</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-slate-400 font-semibold mb-2">Episodes (1 to 200)</label>
-                            <input id="gen-episodes" type="number" min="1" max="200" value="1" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-slate-200 focus:outline-none focus:border-purple-500">
-                        </div>
-                        <div>
-                            <label class="block text-slate-400 font-semibold mb-2">Duration per Ep (1-200 Min)</label>
-                            <input id="gen-duration" type="number" min="1" max="200" value="3" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-slate-200 focus:outline-none focus:border-purple-500">
-                        </div>
-                    </div>
-
-                    <!-- Topic Presets -->
-                    <div>
-                        <label class="block text-xs text-slate-400 font-semibold mb-2">Genre & Topic Selection</label>
-                        <div class="flex flex-wrap gap-2">
-                            <button onclick="setTopicPrompt('Islamic Historical Documentary: Empires and Battles in 4K details')" class="bg-slate-900 border border-slate-800 text-slate-300 px-3 py-1.5 rounded-xl text-xs hover:border-purple-500">🕌 Islamic History</button>
-                            <button onclick="setTopicPrompt('Luxury Supercar Manufacturing & Assembly Line Showcase')" class="bg-slate-900 border border-slate-800 text-slate-300 px-3 py-1.5 rounded-xl text-xs hover:border-purple-500">🏎️ Luxury Cars</button>
-                            <button onclick="setTopicPrompt('Funny Animals with Human Voices and Hilarious Dialogues')" class="bg-slate-900 border border-slate-800 text-slate-300 px-3 py-1.5 rounded-xl text-xs hover:border-purple-500">🐱 Funny Animals</button>
-                            <button onclick="setTopicPrompt('Deep Space Exploration: Wormholes and Galaxy Mysteries')" class="bg-slate-900 border border-slate-800 text-slate-300 px-3 py-1.5 rounded-xl text-xs hover:border-purple-500">🌌 Space Mysteries</button>
-                            <button onclick="setTopicPrompt('Supernatural Horror Haunted Mansion Short Film')" class="bg-slate-900 border border-slate-800 text-slate-300 px-3 py-1.5 rounded-xl text-xs hover:border-purple-500">☠️ Horror / Scary</button>
-                        </div>
-                    </div>
-
-                    <!-- Prompt Textarea -->
-                    <textarea id="gen-prompt" rows="4" placeholder="Type prompt idea, drama storyline, or video concept..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-xs text-slate-100 focus:outline-none focus:border-purple-500 resize-none"></textarea>
-
-                    <button onclick="handleGenerationRequest()" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold py-3 rounded-xl text-xs shadow-lg transition">⚡ Start AI Generation Process</button>
-                </div>
-            </section>
-
-            <!-- 3. VIRAL AI AGENT VIEW -->
-            <section id="sec-viral-agent" class="page-section p-8 max-w-5xl mx-auto w-full space-y-6">
-                <div class="space-y-2">
-                    <h1 class="text-2xl font-bold text-white">🚀 AI Viral Trend Analyzer</h1>
-                    <p class="text-xs text-slate-400">Generate high-converting scripts and research trending viral concepts.</p>
-                </div>
-
-                <div class="bg-[#121722] border border-slate-800 rounded-2xl p-6 space-y-4 shadow-xl">
-                    <div class="h-48 bg-slate-950 rounded-xl p-4 border border-slate-800 text-xs space-y-2 overflow-y-auto">
-                        <div class="text-purple-400 font-bold">🤖 ReelMate Assistant:</div>
-                        <div class="text-slate-300">Ready for trend analysis! Specify your target niche (e.g., Space Secrets, Luxury Cars, Horror Stories, or Animal Animation).</div>
-                    </div>
-                    <div class="flex gap-2">
-                        <input id="agent-input" type="text" placeholder="Enter keyword or category..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-slate-100 focus:outline-none focus:border-purple-500">
-                        <button onclick="alert('Analyzing viral data...')" class="bg-purple-600 text-white font-bold px-6 py-3 rounded-xl text-xs">Analyze Trends</button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 4. 4K DOWNLOADER VIEW -->
-            <section id="sec-downloader" class="page-section p-8 max-w-4xl mx-auto w-full space-y-6">
-                <div class="space-y-2">
-                    <h1 class="text-2xl font-bold text-white">📥 4K No-Watermark Downloader</h1>
-                    <p class="text-xs text-slate-400">Extract high-quality video files from social platforms.</p>
-                </div>
-
-                <div class="bg-[#121722] border border-slate-800 rounded-2xl p-6 space-y-4 shadow-xl">
-                    <input type="text" placeholder="Paste link (TikTok / Instagram / YouTube)..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-xs text-slate-100 focus:outline-none focus:border-purple-500">
-                    <button onclick="alert('Processing 4K Download...')" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl text-xs shadow-lg">Download 4K Media</button>
-                </div>
-            </section>
-
-            <!-- 5. GLOBAL SUBSCRIPTION VIEW -->
-            <section id="sec-pricing" class="page-section p-8 max-w-4xl mx-auto w-full space-y-6">
-                <div class="text-center space-y-2">
-                    <h1 class="text-3xl font-extrabold text-white">Global Payment Checkout</h1>
-                    <p class="text-xs text-slate-400">Supports Credit/Debit Cards, PayPal & Payoneer Transfer.</p>
-                </div>
-
-                <div class="bg-[#121722] border border-slate-800 rounded-3xl p-8 space-y-6 shadow-2xl">
-                    <div class="flex items-center justify-between border-b border-slate-800 pb-4">
-                        <div>
-                            <h3 class="font-bold text-white text-base">Pro Unlimited Studio Pass</h3>
-                            <p class="text-xs text-slate-400">Full Access to 1-200 Episodes & 1-200 Min Video Generations</p>
-                        </div>
-                        <div class="text-xl font-black text-purple-400">$29.00 / mo</div>
-                    </div>
-
-                    <form onsubmit="handleCreditCardPayment(event)" class="space-y-4 text-xs">
-                        <div class="grid grid-cols-3 gap-2 pb-2">
-                            <button type="button" class="p-3 bg-purple-950 border border-purple-600 rounded-xl font-bold text-purple-200 text-center">💳 Credit Card</button>
-                            <button type="button" onclick="alert('Redirecting to PayPal Checkout...')" class="p-3 bg-slate-950 border border-slate-800 rounded-xl font-bold text-slate-400 text-center">🅿️ PayPal</button>
-                            <button type="button" onclick="alert('Redirecting to Payoneer Checkout...')" class="p-3 bg-slate-950 border border-slate-800 rounded-xl font-bold text-slate-400 text-center">🅿️ Payoneer</button>
-                        </div>
-
-                        <div>
-                            <label class="block text-slate-300 font-semibold mb-1">Cardholder Name</label>
-                            <input type="text" required placeholder="Name on Card" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500">
-                        </div>
-
-                        <div>
-                            <label class="block text-slate-300 font-semibold mb-1">Card Number (Visa / MasterCard / Amex)</label>
-                            <input type="text" required maxlength="19" placeholder="4000 0000 0000 0000" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500">
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-slate-300 font-semibold mb-1">Expiry Date (MM/YY)</label>
-                                <input type="text" required maxlength="5" placeholder="12/28" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500">
-                            </div>
-                            <div>
-                                <label class="block text-slate-300 font-semibold mb-1">CVV / CVC Code</label>
-                                <input type="password" required maxlength="4" placeholder="123" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500">
-                            </div>
-                        </div>
-
-                        <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold py-3 rounded-xl shadow-lg transition">Complete Payment & Activate Pro Access</button>
-                    </form>
-                </div>
-            </section>
-
-            <!-- 6. PRIVACY & SECURITY VIEW -->
-            <section id="sec-privacy" class="page-section p-8 max-w-4xl mx-auto w-full space-y-6">
-                <h1 class="text-2xl font-bold text-white">Security Standards</h1>
-                <div class="bg-[#121722] border border-slate-800 p-6 rounded-xl text-xs text-slate-400 space-y-3 leading-relaxed">
-                    <p>ReelMate AI Pro Studio utilizes end-to-end 256-bit SSL encryption, isolating user authentication data and protecting media assets against external interception.</p>
-                </div>
-            </section>
-
-            <!-- 7. SECRET ADMIN VIEW -->
-            <section id="sec-owner" class="page-section p-8 max-w-md mx-auto w-full space-y-6 text-center py-20">
-                <div class="text-4xl">🔐</div>
-                <h1 class="text-xl font-bold text-white">Admin System Access</h1>
-                <div class="space-y-4">
-                    <input id="admin-pass" type="password" placeholder="Enter System Admin Code" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-purple-500">
-                    <button onclick="verifyAdmin()" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 rounded-xl text-xs shadow-lg">Verify Admin Code</button>
-                </div>
-            </section>
-        </div>
-    </div>
-
-    <!-- Router & Core Logic Scripts -->
     <script>
-        let isProUser = false;
-        let isOwner = false;
+        const BACKEND_URL = "https://zr-film-draft-app.onrender.com"; // AAPKA LIVE RENDER BACKEND URL
 
-        function switchNav(navId) {
-            document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('bg-gradient-to-r', 'from-purple-600/30', 'to-indigo-600/20', 'text-purple-300', 'border', 'border-purple-500/30', 'font-semibold');
-                btn.classList.add('text-slate-400');
-            });
+        function openTab(evt, tabName) {
+            let panels = document.getElementsByClassName("panel");
+            for (let p of panels) p.classList.remove("active");
+            
+            let btns = document.getElementsByClassName("tab-btn");
+            for (let b of btns) b.classList.remove("active");
+            
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
 
-            const activeSection = document.getElementById('sec-' + navId);
-            if (activeSection) {
-                activeSection.classList.add('active');
+        async function generateVideo(studioType) {
+            alert(studioType + " generation request sent to live backend! Processing via Replicate AI...");
+        }
+
+        function triggerDownload() {
+            const link = document.getElementById('videoUrlInput').value;
+            if(!link) {
+                alert("Pehle video URL paste karein!");
+                return;
             }
 
-            const activeBtn = document.getElementById('btn-' + navId);
-            if (activeBtn) {
-                activeBtn.classList.add('bg-gradient-to-r', 'from-purple-600/30', 'to-indigo-600/20', 'text-purple-300', 'border', 'border-purple-500/30', 'font-semibold');
-            }
-
-            document.getElementById('header-nav-title').innerText = navId.replace('-', ' ');
-        }
-
-        function handleUserSignUp(e) {
-            e.preventDefault();
-            const name = document.getElementById('user-fullname').value;
-            document.getElementById('active-user-name').innerText = name;
-            document.getElementById('auth-modal').style.display = 'none';
-            alert('Welcome ' + name + '! 3-Day Trial is active for short videos (1-5 min). Subscribe via Card/PayPal to unlock 200 episodes.');
-        }
-
-        function bypassAsOwner() {
-            const pass = prompt('Enter Admin Password:');
-            if (pass === 'ZR_Empire_9988#') {
-                isProUser = true;
-                isOwner = true;
-                document.getElementById('active-user-name').innerText = 'System Admin';
-                document.getElementById('account-status-badge').innerText = '👑 Unlimited Free Pro Access';
-                document.getElementById('account-status-badge').className = 'px-3 py-2 bg-emerald-950/40 border border-emerald-500/30 rounded-xl text-[11px] text-emerald-300 font-bold text-center';
-                document.getElementById('auth-modal').style.display = 'none';
-                alert('Admin Access Granted!');
-            } else if (pass !== null) {
-                alert('Incorrect Password!');
-            }
-        }
-
-        function handleGenerationRequest() {
-            const episodes = parseInt(document.getElementById('gen-episodes').value) || 1;
-            const duration = parseInt(document.getElementById('gen-duration').value) || 1;
-
-            if (!isProUser && !isOwner) {
-                if (episodes > 1 || duration > 5) {
-                    alert('⚠️ Trial Limit: Free tier supports short videos up to 5 min. Upgrade to Pro subscription to generate up to 200 episodes!');
-                    switchNav('pricing');
-                    return;
-                }
-            }
-
-            alert('🚀 Generation Engine Active!\n- Episodes: ' + episodes + '\n- Duration per Ep: ' + duration + ' min\n- Aspect Ratio: ' + document.getElementById('gen-aspect-ratio').value);
-        }
-
-        function handleCreditCardPayment(e) {
-            e.preventDefault();
-            alert('🔒 Verification in progress...');
-            setTimeout(() => {
-                isProUser = true;
-                document.getElementById('account-status-badge').innerText = '💎 Pro Access Active';
-                document.getElementById('account-status-badge').className = 'px-3 py-2 bg-emerald-950/40 border border-emerald-500/30 rounded-xl text-[11px] text-emerald-300 font-bold text-center';
-                alert('✓ Payment Successful! Unlimited 1-200 Episodes & Duration unlocked.');
-                switchNav('studio');
-            }, 1000);
-        }
-
-        function setTopicPrompt(promptText) {
-            document.getElementById('gen-prompt').value = promptText;
-        }
-
-        function verifyAdmin() {
-            const pass = document.getElementById('admin-pass').value;
-            if (pass === 'ZR_Empire_9988#') {
-                isProUser = true;
-                isOwner = true;
-                document.getElementById('active-user-name').innerText = 'System Admin';
-                document.getElementById('account-status-badge').innerText = '👑 Unlimited Free Pro Access';
-                document.getElementById('account-status-badge').className = 'px-3 py-2 bg-emerald-950/40 border border-emerald-500/30 rounded-xl text-[11px] text-emerald-300 font-bold text-center';
-                alert('Admin Access Granted!');
-                switchNav('studio');
-            } else {
-                alert('Incorrect Password!');
-            }
+            // --- ADSTERRA POP-UNDER TRIGGER SIMULATION ---
+            // Yahan aap apni Adsterra direct link ya pop-under code execute kar sakte hain
+            console.log("Triggering Adsterra Ad Banner / Popunder");
+            
+            const resultBox = document.getElementById('downloadResult');
+            resultBox.style.display = "block";
+                resultBox.innerHTML = `
+                <p style="color: #10b981; font-weight: bold;">✔ Video Ready!</p>
+                <p>Link: ${link}</p>
+                <a href="${link}" target="_blank" style="display:inline-block; margin-top:10px; color:#60a5fa; text-decoration:underline;">Click to Download 4K File</a>
+            `;
         }
     </script>
 </body>
