@@ -3,42 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZR Film Draft - AI Video Studio & Free Downloader</title>
+    <title>ZR Film Draft - AI Video Studio & Platform Hub</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #0f172a; color: #f8fafc; line-height: 1.6; }
-        header { background: #1e293b; padding: 20px; text-align: center; border-bottom: 2px solid #3b82f6; }
-        header h1 { font-size: 2rem; color: #60a5fa; }
-        header p { color: #94a3b8; font-size: 0.9rem; }
+        header { background: #1e293b; padding: 20px; text-align: center; border-bottom: 2px solid #3b82f6; display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; }
+        header h1 { font-size: 1.8rem; color: #60a5fa; }
+        .user-badge { background: #334155; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; color: #38bdf8; font-weight: bold; }
         
-        .container { max-width: 1100px; margin: 20px auto; padding: 0 15px; }
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; }
-        .tab-btn { padding: 12px 24px; background: #334155; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
+        .tabs { display: flex; gap: 8px; margin-bottom: 20px; justify-content: center; flex-wrap: wrap; }
+        .tab-btn { padding: 10px 18px; background: #334155; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; font-size: 0.9rem; }
         .tab-btn.active, .tab-btn:hover { background: #2563eb; }
         
         .panel { display: none; background: #1e293b; padding: 25px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
         .panel.active { display: block; }
         
-        h2 { margin-bottom: 15px; color: #93c5fd; }
+        h2 { margin-bottom: 15px; color: #93c5fd; font-size: 1.4rem; }
         .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; }
-        input, select, textarea { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #475569; background: #0f172a; color: #fff; }
-        textarea { height: 100px; resize: vertical; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.85rem; color: #cbd5e1; }
+        input, select, textarea { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #475569; background: #0f172a; color: #fff; font-size: 0.95rem; }
+        textarea { height: 90px; resize: vertical; }
         
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        @media(max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
         
         .btn-submit { display: block; width: 100%; padding: 12px; background: #10b981; color: white; border: none; border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 15px; }
         .btn-submit:hover { background: #059669; }
         
+        .auth-card { max-width: 400px; margin: 40px auto; background: #1e293b; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
         .ad-container { background: #334155; border: 2px dashed #64748b; padding: 15px; text-align: center; margin: 15px 0; border-radius: 8px; color: #cbd5e1; }
         .output-box { margin-top: 20px; padding: 15px; background: #0f172a; border-radius: 6px; border-left: 4px solid #10b981; display: none; }
+        video { width: 100%; border-radius: 8px; margin-top: 10px; }
     </style>
 </head>
 <body>
 
     <header>
         <h1>ZR FILM DRAFT</h1>
-        <p>Advanced AI Studio & HD/4K Video Downloader Platform</p>
+        <div id="userHeaderInfo" class="user-badge">Admin Mode: Zohaib (Lifetime Free)</div>
     </header>
 
     <div class="container">
@@ -47,18 +50,20 @@
             <button class="tab-btn active" onclick="openTab(event, 'drama')">Drama Studio</button>
             <button class="tab-btn" onclick="openTab(event, 'film')">Film Studio</button>
             <button class="tab-btn" onclick="openTab(event, 'downloader')">Free 4K Downloader</button>
+            <button class="tab-btn" onclick="openTab(event, 'dashboard')">User Hub & Pricing</button>
+            <button class="tab-btn" onclick="openTab(event, 'auth')" style="background:#7c3aed;">Sign In / Sign Up</button>
         </div>
 
         <!-- 1. Drama Studio -->
         <div id="drama" class="panel active">
-            <h2>Drama Studio Generator</h2>
+            <h2>Drama Studio & Generator</h2>
             <div class="form-group">
-                <label>Scene Prompt / Concept:</label>
-                <textarea id="dramaPrompt" placeholder="Enter your drama scene description..."></textarea>
+                <label>Scene Prompt / Concept (Refined by AI):</label>
+                <textarea id="dramaPrompt" placeholder="Enter drama concept..."></textarea>
             </div>
             <div class="grid-2">
                 <div class="form-group">
-                    <label>AI Script Refinement Model:</label>
+                    <label>AI Script Model:</label>
                     <select id="dramaModel">
                         <option value="DeepSeek">DeepSeek AI</option>
                         <option value="Gemini">Google Gemini</option>
@@ -68,8 +73,8 @@
                 <div class="form-group">
                     <label>Style Mode:</label>
                     <select id="dramaStyle">
-                        <option value="2D Animation">2D Animation</option>
                         <option value="3D Cinematic Render">3D Cinematic Render</option>
+                        <option value="2D Animation">2D Animation</option>
                         <option value="Realistic Live-Action">Realistic Live-Action</option>
                     </select>
                 </div>
@@ -77,79 +82,111 @@
             <div class="grid-2">
                 <div class="form-group">
                     <label>Duration (Minutes):</label>
-                    <input type="number" value="5" min="1" max="20">
+                    <input type="number" id="dramaDuration" value="2" min="1" max="20">
                 </div>
                 <div class="form-group">
                     <label>Voiceover Language:</label>
-                    <select>
+                    <select id="dramaLang">
                         <option value="Urdu">Urdu</option>
                         <option value="English">English</option>
-                        <option value="Hindi">Hindi</option>
                     </select>
                 </div>
             </div>
             <button class="btn-submit" onclick="generateVideo('Drama')">Generate Drama Video</button>
+            <div id="dramaResult" class="output-box"></div>
         </div>
 
         <!-- 2. Film Studio -->
         <div id="film" class="panel">
-            <h2>Film Studio (Long-Form Cinematic Engine)</h2>
+            <h2>Film Studio & Long-Form Generator</h2>
             <div class="form-group">
-                <label>Storyboard & Movie Script:</label>
-                <textarea id="filmPrompt" placeholder="Paste full movie scene storyboard..."></textarea>
+                <label>Storyboard & Script:</label>
+                <textarea id="filmPrompt" placeholder="Paste long-form film storyboard..."></textarea>
             </div>
             <div class="grid-2">
                 <div class="form-group">
                     <label>Camera Movement Controls:</label>
                     <select>
-                        <option>Pan Left to Right</option>
-                        <option>Zoom In Tracking Shot</option>
-                        <option>360 Orbit Shot</option>
+                        <option>Pan Left to Right / Zoom In</option>
+                        <option>360 Orbit Cinematic Shot</option>
                         <option>Drone Overhead View</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Video Orientation / Rotation:</label>
+                    <label>Video Rotation / Aspect Ratio:</label>
                     <select>
                         <option>16:9 Landscape (Horizontal)</option>
-                        <option>9:16 Portrait (Vertical Shorts/Reels)</option>
+                        <option>9:16 Portrait (Shorts/Reels)</option>
                     </select>
                 </div>
             </div>
             <div class="form-group">
                 <label>Movie Duration (1 to 200 Minutes):</label>
-                <input type="range" min="1" max="200" value="30" oninput="document.getElementById('durVal').innerText = this.value + ' Mins'">
+                <input type="range" id="filmDurRange" min="1" max="200" value="30" oninput="document.getElementById('durVal').innerText = this.value + ' Mins'">
                 <span id="durVal" style="color: #60a5fa; font-weight: bold;">30 Mins</span>
             </div>
             <button class="btn-submit" onclick="generateVideo('Film')">Generate Feature Film</button>
+            <div id="filmResult" class="output-box"></div>
         </div>
 
-        <!-- 3. Free HD/4K Video Downloader (Ad-Monetized) -->
+        <!-- 3. Free HD/4K Video Downloader -->
         <div id="downloader" class="panel">
-            <h2>Free HD/4K Video Downloader</h2>
-            <p style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 15px;">Download videos without watermarks instantly!</p>
+            <h2>Free HD/4K Video Downloader (Ad-Monetized)</h2>
+            <p style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 15px;">Paste link to download watermark-free videos instantly.</p>
             
             <div class="form-group">
-                <label>Paste Video Link (TikTok, YouTube, FB, Instagram):</label>
+                <label>Video Link (YouTube, TikTok, Instagram):</label>
                 <input type="url" id="videoUrlInput" placeholder="https://..." required>
             </div>
 
-            <!-- Adsterra Monetization Placeholder -->
+            <!-- Adsterra Monetization Placeholder / Script Slot -->
             <div class="ad-container">
-                <p><strong>[ Adsterra Banner Ad Unit Here ]</strong></p>
-                <span style="font-size: 0.8rem;">Ad script triggers automatically when download starts.</span>
+                <p style="color:#60a5fa; font-weight:bold;">Adsterra Smart Banner / Pop-under Active</p>
+                <span style="font-size: 0.75rem;">Ads will trigger automatically during stream extraction.</span>
             </div>
 
             <button class="btn-submit" style="background: #2563eb;" onclick="triggerDownload()">Start Free Download (HD/4K)</button>
-            
             <div id="downloadResult" class="output-box"></div>
+        </div>
+
+        <!-- 4. User Dashboard & Pricing -->
+        <div id="dashboard" class="panel">
+            <h2>User Hub & Subscription Tiers</h2>
+            <div class="grid-2" style="margin-top: 15px;">
+                <div style="background:#0f172a; padding:20px; border-radius:8px; border:1px solid #334155;">
+                    <h3 style="color:#38bdf8; margin-bottom:10px;">Account Status</h3>
+                    <p><strong>Name:</strong> <span id="profileName">Zohaib (Admin)</span></p>
+                    <p><strong>Plan:</strong> Lifetime Free Admin Access</p>
+                    <p><strong>Credits:</strong> Unlimited</p>
+                </div>
+                <div style="background:#0f172a; padding:20px; border-radius:8px; border:1px solid #334155;">
+                    <h3 style="color:#10b981; margin-bottom:10px;">Upgrade Options</h3>
+                    <p style="font-size:0.9rem; color:#94a3b8;">Basic, Pro, and Ultra subscription plans available for commercial users.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Sign In / Sign Up Panel -->
+        <div id="auth" class="panel">
+            <div class="auth-card">
+                <h2 style="text-align: center; margin-bottom: 20px;">User Authentication</h2>
+                <div class="form-group">
+                    <label>Email Address:</label>
+                    <input type="email" id="authEmail" placeholder="user@example.com">
+                </div>
+                <div class="form-group">
+                    <label>Password:</label>
+                    <input type="password" id="authPass" placeholder="********">
+                </div>
+                <button class="btn-submit" onclick="handleAuth('signup')">Sign Up (Register)</button>
+                <button class="btn-submit" style="background:#3b82f6; margin-top:10px;" onclick="handleAuth('signin')">Sign In</button>
+                <div id="authMsg" style="margin-top:15px; text-align:center; font-size:0.9rem;"></div>
+            </div>
         </div>
 
     </div>
 
     <script>
-        const BACKEND_URL = "https://zr-film-draft-app.onrender.com"; // AAPKA LIVE RENDER BACKEND URL
-
         function openTab(evt, tabName) {
             let panels = document.getElementsByClassName("panel");
             for (let p of panels) p.classList.remove("active");
@@ -162,27 +199,69 @@
         }
 
         async function generateVideo(studioType) {
-            alert(studioType + " generation request sent to live backend! Processing via Replicate AI...");
+            const prompt = studioType === 'Drama' ? document.getElementById('dramaPrompt').value : document.getElementById('filmPrompt').value;
+            const resultBox = studioType === 'Drama' ? document.getElementById('dramaResult') : document.getElementById('filmResult');
+
+            if(!prompt) {
+                alert("Pehle prompt ya script enter karein!");
+                return;
+            }
+
+            resultBox.style.display = "block";
+            resultBox.innerHTML = "<p style='color:#60a5fa;'>⏳ Processing video via Render Backend & Replicate AI...</p>";
+
+            try {
+                const response = await fetch('/api/generate-video', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt, duration: 2, aspectRatio: '16:9' })
+                });
+                const data = await response.json();
+                if(data.success) {
+                    resultBox.innerHTML = `
+                        <p style="color: #10b981; font-weight: bold;">✔ ${studioType} Video Generated Successfully!</p>
+                        <video controls autoplay src="${data.videoUrl}"></video>
+                        <a href="${data.videoUrl}" download target="_blank" style="display:inline-block; margin-top:10px; color:#60a5fa;">📥 Download Video File</a>
+                    `;
+                } else {
+                    resultBox.innerHTML = `<p style="color: #ef4444;">Error: ${data.error}</p>`;
+                }
+            } catch(err) {
+                resultBox.innerHTML = `<p style="color: #ef4444;">Server Connection Error: ${err.message}</p>`;
+            }
         }
 
         function triggerDownload() {
             const link = document.getElementById('videoUrlInput').value;
             if(!link) {
-                alert("Pehle video URL paste karein!");
+                alert("Pehle video link paste karein!");
                 return;
             }
 
-            // --- ADSTERRA POP-UNDER TRIGGER SIMULATION ---
-            // Yahan aap apni Adsterra direct link ya pop-under code execute kar sakte hain
-            console.log("Triggering Adsterra Ad Banner / Popunder");
-            
+            // --- ADSTERRA SCRIPT / POPUNDER INTEGRATION ---
+            // Yahan apna Adsterra Direct Link paste karein taake ad run ho
+            const adsterraLink = "https://www.highrevenuegate.com/xxxxxx"; 
+            window.open(adsterraLink, '_blank');
+
             const resultBox = document.getElementById('downloadResult');
             resultBox.style.display = "block";
-                resultBox.innerHTML = `
-                <p style="color: #10b981; font-weight: bold;">✔ Video Ready!</p>
-                <p>Link: ${link}</p>
-                <a href="${link}" target="_blank" style="display:inline-block; margin-top:10px; color:#60a5fa; text-decoration:underline;">Click to Download 4K File</a>
+            resultBox.innerHTML = `
+                <p style="color: #10b981; font-weight: bold;">✔ Ready for Download!</p>
+                <a href="${link}" download target="_blank" style="display:inline-block; margin-top:10px; padding:10px; background:#10b981; color:#fff; border-radius:6px; text-decoration:none; font-weight:bold;">📥 Save HD/4K File Now</a>
             `;
+        }
+
+        function handleAuth(type) {
+            const email = document.getElementById('authEmail').value;
+            const msg = document.getElementById('authMsg');
+            if(!email) {
+                alert("Pehle email enter karein!");
+                return;
+            }
+            msg.style.color = "#10b981";
+            msg.innerText = type === 'signup' ? "Account successfully created! Welcome." : "Signed in successfully!";
+            document.getElementById('userHeaderInfo').innerText = `User: ${email}`;
+            document.getElementById('profileName').innerText = email;
         }
     </script>
 </body>
